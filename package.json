@@ -1,0 +1,23 @@
+{
+  "name": "rollbar-toolkit",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "build": "bun run build:cli && bun run build:mcp",
+    "build:cli": "bun build packages/cli/src/bin.ts --bundle --target=bun --minify --outfile dist/rollbar-cli.js",
+    "build:mcp": "bun build packages/mcp/src/index.ts --bundle --target=bun --minify --outfile dist/rollbar-mcp.js --external sury --external @valibot/to-json-schema --external effect",
+    "compile": "bun run compile:cli && bun run compile:mcp",
+    "compile:cli": "bun build packages/cli/src/bin.ts --compile --minify --outfile dist/rollbar",
+    "compile:mcp": "bun build packages/mcp/src/index.ts --compile --minify --outfile dist/rollbar-mcp --external sury --external @valibot/to-json-schema --external effect",
+    "dev:mcp": "vp dev --filter @rollbar-toolkit/mcp",
+    "dev:cli": "vp dev --filter @rollbar-toolkit/cli",
+    "test": "vp test",
+    "check": "vp check",
+    "lint": "vp lint",
+    "format": "vp format",
+    "clean": "rm -rf packages/*/dist dist packages/*/node_modules node_modules"
+  },
+  "devDependencies": {
+    "vite-plus": "latest"
+  }
+}

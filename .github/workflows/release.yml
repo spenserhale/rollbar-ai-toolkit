@@ -1,0 +1,73 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - target: bun-linux-x64
+            os: ubuntu-latest
+            suffix: linux-x64
+          - target: bun-linux-arm64
+            os: ubuntu-latest
+            suffix: linux-arm64
+          - target: bun-darwin-x64
+            os: macos-latest
+            suffix: darwin-x64
+          - target: bun-darwin-arm64
+            os: macos-latest
+            suffix: darwin-arm64
+          - target: bun-windows-x64
+            os: windows-latest
+            suffix: windows-x64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun install --frozen-lockfile
+
+      - name: Build CLI
+        run: bun build packages/cli/src/bin.ts --compile --minify --target=${{ matrix.target }} --outfile dist/rollbar-${{ matrix.suffix }}
+
+      - name: Build MCP
+        run: bun build packages/mcp/src/index.ts --compile --minify --target=${{ matrix.target }} --outfile dist/rollbar-mcp-${{ matrix.suffix }} --external sury --external @valibot/to-json-schema --external effect
+
+      - name: Add .exe extension on Windows
+        if: matrix.suffix == 'windows-x64'
+        shell: bash
+        run: |
+          mv dist/rollbar-windows-x64 dist/rollbar-windows-x64.exe
+          mv dist/rollbar-mcp-windows-x64 dist/rollbar-mcp-windows-x64.exe
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: binaries-${{ matrix.suffix }}
+          path: dist/
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: artifacts/*
