@@ -1,7 +1,8 @@
 import { RollbarClient, resolveConfig } from "@rollbar-toolkit/sdk";
 import type { LocalContext } from "../../context.js";
+import { writeOutput, type OutputFlags } from "../../output.js";
 
-interface ListDeploysFlags {
+interface ListDeploysFlags extends OutputFlags {
   readonly projectId?: number;
   readonly environment?: string;
   readonly limit: number;
@@ -21,22 +22,22 @@ export async function list(this: LocalContext, flags: ListDeploysFlags): Promise
     page: flags.page,
   });
 
-  this.process.stdout.write(JSON.stringify(result, null, 2) + "\n");
+  writeOutput(this.process.stdout, result, flags);
 }
 
-interface GetDeployFlags {
+interface GetDeployFlags extends OutputFlags {
   readonly token?: string;
 }
 
 export async function get(
   this: LocalContext,
   flags: GetDeployFlags,
-  deployId: number
+  deployId: number,
 ): Promise<void> {
   const client = flags.token
     ? new RollbarClient(resolveConfig({ projectToken: flags.token }))
     : this.rollbar;
 
   const result = await client.getDeploy(deployId);
-  this.process.stdout.write(JSON.stringify(result, null, 2) + "\n");
+  writeOutput(this.process.stdout, result, flags);
 }

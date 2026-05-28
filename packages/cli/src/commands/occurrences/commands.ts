@@ -1,4 +1,5 @@
 import { buildCommand, buildRouteMap } from "@stricli/core";
+import { outputFlagDefs } from "../../output.js";
 
 export const listCommand = buildCommand({
   loader: async () => {
@@ -6,11 +7,9 @@ export const listCommand = buildCommand({
     return list;
   },
   parameters: {
-    positional: {
-      kind: "tuple",
-      parameters: [],
-    },
+    positional: { kind: "tuple", parameters: [] },
     flags: {
+      ...outputFlagDefs,
       itemId: {
         kind: "parsed",
         parse: Number,
@@ -37,9 +36,7 @@ export const listCommand = buildCommand({
       },
     },
   },
-  docs: {
-    brief: "List occurrences of errors",
-  },
+  docs: { brief: "List occurrences of errors" },
 });
 
 export const getCommand = buildCommand({
@@ -50,14 +47,10 @@ export const getCommand = buildCommand({
   parameters: {
     positional: {
       kind: "tuple",
-      parameters: [
-        {
-          brief: "Occurrence ID",
-          parse: String,
-        },
-      ],
+      parameters: [{ brief: "Occurrence ID", parse: String }],
     },
     flags: {
+      ...outputFlagDefs,
       token: {
         kind: "parsed",
         parse: String,
@@ -66,9 +59,7 @@ export const getCommand = buildCommand({
       },
     },
   },
-  docs: {
-    brief: "Get a specific occurrence",
-  },
+  docs: { brief: "Get a specific occurrence" },
 });
 
 export const occurrencesRoutes = buildRouteMap({
@@ -76,7 +67,5 @@ export const occurrencesRoutes = buildRouteMap({
     list: listCommand,
     get: getCommand,
   },
-  docs: {
-    brief: "Manage Rollbar occurrences",
-  },
+  docs: { brief: "Manage Rollbar occurrences" },
 });

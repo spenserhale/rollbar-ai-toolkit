@@ -1,4 +1,5 @@
 import { buildCommand, buildRouteMap } from "@stricli/core";
+import { outputFlagDefs } from "../../output.js";
 
 export const listCommand = buildCommand({
   loader: async () => {
@@ -11,6 +12,7 @@ export const listCommand = buildCommand({
       parameters: [],
     },
     flags: {
+      ...outputFlagDefs,
       token: {
         kind: "parsed",
         parse: String,
@@ -40,6 +42,7 @@ export const getCommand = buildCommand({
       ],
     },
     flags: {
+      ...outputFlagDefs,
       token: {
         kind: "parsed",
         parse: String,

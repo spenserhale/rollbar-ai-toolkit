@@ -1,4 +1,5 @@
 import { buildCommand, buildRouteMap } from "@stricli/core";
+import { outputFlagDefs } from "../../output.js";
 
 export const listCommand = buildCommand({
   loader: async () => {
@@ -6,11 +7,9 @@ export const listCommand = buildCommand({
     return list;
   },
   parameters: {
-    positional: {
-      kind: "tuple",
-      parameters: [],
-    },
+    positional: { kind: "tuple", parameters: [] },
     flags: {
+      ...outputFlagDefs,
       projectId: {
         kind: "parsed",
         parse: Number,
@@ -43,9 +42,7 @@ export const listCommand = buildCommand({
       },
     },
   },
-  docs: {
-    brief: "List deploys",
-  },
+  docs: { brief: "List deploys" },
 });
 
 export const getCommand = buildCommand({
@@ -56,14 +53,10 @@ export const getCommand = buildCommand({
   parameters: {
     positional: {
       kind: "tuple",
-      parameters: [
-        {
-          brief: "Deploy ID",
-          parse: Number,
-        },
-      ],
+      parameters: [{ brief: "Deploy ID", parse: Number }],
     },
     flags: {
+      ...outputFlagDefs,
       token: {
         kind: "parsed",
         parse: String,
@@ -72,9 +65,7 @@ export const getCommand = buildCommand({
       },
     },
   },
-  docs: {
-    brief: "Get a specific deploy",
-  },
+  docs: { brief: "Get a specific deploy" },
 });
 
 export const deploysRoutes = buildRouteMap({
@@ -82,7 +73,5 @@ export const deploysRoutes = buildRouteMap({
     list: listCommand,
     get: getCommand,
   },
-  docs: {
-    brief: "Manage Rollbar deploys",
-  },
+  docs: { brief: "Manage Rollbar deploys" },
 });

@@ -10,8 +10,15 @@ export type {
   RollbarEnvironment,
   RollbarUser,
   ListItemsParams,
+  ListItemsResult,
   ListOccurrencesParams,
+  ListOccurrencesResult,
   ListDeploysParams,
+  ListDeploysResult,
+  GetItemDetailedParams,
+  ItemDetailed,
+  TopItemDetailsParams,
+  TopItemDetails,
   ErrorResponse,
 } from "./types.js";
 export {

@@ -1,7 +1,8 @@
 import { RollbarClient, resolveConfig } from "@rollbar-toolkit/sdk";
 import type { LocalContext } from "../../context.js";
+import { writeOutput, type OutputFlags } from "../../output.js";
 
-interface ListUsersFlags {
+interface ListUsersFlags extends OutputFlags {
   readonly token?: string;
 }
 
@@ -11,10 +12,10 @@ export async function list(this: LocalContext, flags: ListUsersFlags): Promise<v
     : this.rollbar;
 
   const result = await client.listUsers();
-  this.process.stdout.write(JSON.stringify(result, null, 2) + "\n");
+  writeOutput(this.process.stdout, result, flags);
 }
 
-interface GetUserFlags {
+interface GetUserFlags extends OutputFlags {
   readonly token?: string;
 }
 
@@ -24,5 +25,5 @@ export async function get(this: LocalContext, flags: GetUserFlags, id: number): 
     : this.rollbar;
 
   const result = await client.getUser(id);
-  this.process.stdout.write(JSON.stringify(result, null, 2) + "\n");
+  writeOutput(this.process.stdout, result, flags);
 }

@@ -6,5 +6,4 @@ dist/
 *.bun-build
 .vite/
 .DS_Store
-references/
 ref/

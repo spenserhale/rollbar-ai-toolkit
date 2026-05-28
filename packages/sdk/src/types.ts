@@ -8,6 +8,7 @@ export const RollbarConfigSchema = z.object({
   projectToken: z.string().default(""),
   accountToken: z.string().default(""),
   baseUrl: z.string().url().default("https://api.rollbar.com/api/1"),
+  projectId: z.number().int().positive().optional(),
 });
 
 export type RollbarConfig = z.infer<typeof RollbarConfigSchema>;
@@ -52,6 +53,12 @@ export interface ListItemsParams {
   page?: number;
 }
 
+export interface ListItemsResult {
+  items: RollbarItem[];
+  page: number;
+  total_count: number | null;
+}
+
 // ---------------------------------------------------------------------------
 // Occurrences
 // ---------------------------------------------------------------------------
@@ -80,6 +87,40 @@ export interface ListOccurrencesParams {
   itemId?: number;
   limit?: number;
   page?: number;
+}
+
+export interface ListOccurrencesResult {
+  instances: RollbarOccurrence[];
+  page: number;
+  total_count: number | null;
+}
+
+// ---------------------------------------------------------------------------
+// Item Detailed (item + latest occurrence combined)
+// ---------------------------------------------------------------------------
+
+export interface GetItemDetailedParams {
+  /** Include local variables / args from stack trace frames (default: false) */
+  includeVars?: boolean;
+}
+
+export interface ItemDetailed {
+  item: RollbarItem;
+  latestOccurrence: RollbarOccurrence | null;
+}
+
+export interface TopItemDetailsParams {
+  /** Time window to look back — "24h", "7d", "30d", "90d" (default: "30d") */
+  window?: string;
+  limit?: number;
+  status?: string;
+  level?: string;
+  environment?: string;
+  includeVars?: boolean;
+}
+
+export interface TopItemDetails extends ItemDetailed {
+  rank: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -116,6 +157,12 @@ export interface ListDeploysParams {
   environment?: string;
   limit?: number;
   page?: number;
+}
+
+export interface ListDeploysResult {
+  deploys: RollbarDeploy[];
+  page: number;
+  total_count: number | null;
 }
 
 // ---------------------------------------------------------------------------

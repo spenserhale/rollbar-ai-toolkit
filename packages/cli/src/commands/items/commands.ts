@@ -1,4 +1,5 @@
 import { buildCommand, buildRouteMap } from "@stricli/core";
+import { outputFlagDefs } from "../../output.js";
 
 export const listCommand = buildCommand({
   loader: async () => {
@@ -6,15 +7,13 @@ export const listCommand = buildCommand({
     return list;
   },
   parameters: {
-    positional: {
-      kind: "tuple",
-      parameters: [],
-    },
+    positional: { kind: "tuple", parameters: [] },
     flags: {
+      ...outputFlagDefs,
       status: {
         kind: "parsed",
         parse: String,
-        brief: "Filter by status (active, resolved, muted)",
+        brief: "Filter by status (active, resolved, muted, archived)",
         optional: true,
       },
       level: {
@@ -49,9 +48,7 @@ export const listCommand = buildCommand({
       },
     },
   },
-  docs: {
-    brief: "List items (errors) from Rollbar",
-  },
+  docs: { brief: "List items (errors) from Rollbar" },
 });
 
 export const getCommand = buildCommand({
@@ -62,14 +59,10 @@ export const getCommand = buildCommand({
   parameters: {
     positional: {
       kind: "tuple",
-      parameters: [
-        {
-          brief: "Internal Rollbar item ID",
-          parse: Number,
-        },
-      ],
+      parameters: [{ brief: "Item ID", parse: String }],
     },
     flags: {
+      ...outputFlagDefs,
       token: {
         kind: "parsed",
         parse: String,
@@ -78,9 +71,7 @@ export const getCommand = buildCommand({
       },
     },
   },
-  docs: {
-    brief: "Get an item by its internal Rollbar ID",
-  },
+  docs: { brief: "Get an item by ID" },
 });
 
 export const getByCounterCommand = buildCommand({
@@ -91,14 +82,10 @@ export const getByCounterCommand = buildCommand({
   parameters: {
     positional: {
       kind: "tuple",
-      parameters: [
-        {
-          brief: "Project counter (visible in Rollbar UI)",
-          parse: Number,
-        },
-      ],
+      parameters: [{ brief: "Project counter (visible in Rollbar UI)", parse: Number }],
     },
     flags: {
+      ...outputFlagDefs,
       token: {
         kind: "parsed",
         parse: String,
@@ -107,38 +94,7 @@ export const getByCounterCommand = buildCommand({
       },
     },
   },
-  docs: {
-    brief: "Get an item by project counter",
-  },
-});
-
-export const getByUuidCommand = buildCommand({
-  loader: async () => {
-    const { getByUuid } = await import("./impl.js");
-    return getByUuid;
-  },
-  parameters: {
-    positional: {
-      kind: "tuple",
-      parameters: [
-        {
-          brief: "Occurrence UUID",
-          parse: String,
-        },
-      ],
-    },
-    flags: {
-      token: {
-        kind: "parsed",
-        parse: String,
-        brief: "Override project access token",
-        optional: true,
-      },
-    },
-  },
-  docs: {
-    brief: "Get an item by occurrence UUID",
-  },
+  docs: { brief: "Get an item by project counter" },
 });
 
 export const itemsRoutes = buildRouteMap({
@@ -146,9 +102,6 @@ export const itemsRoutes = buildRouteMap({
     list: listCommand,
     get: getCommand,
     "get-by-counter": getByCounterCommand,
-    "get-by-uuid": getByUuidCommand,
   },
-  docs: {
-    brief: "Manage Rollbar items (errors)",
-  },
+  docs: { brief: "Manage Rollbar items (errors)" },
 });

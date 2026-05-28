@@ -104,20 +104,20 @@ Or if using Bun instead of the compiled binary:
 
 ### Available Tools
 
-| Tool | Description |
-|------|-------------|
-| `list_items` | List items with optional filters (status, level, environment) |
-| `get_item` | Get item by internal ID |
-| `get_item_by_counter` | Get item by project counter number |
-| `list_occurrences` | List occurrences, optionally filtered by item ID |
-| `get_occurrence` | Get a single occurrence |
-| `list_projects` | List all projects |
-| `get_project` | Get project by ID |
-| `list_deploys` | List deploys with optional filters |
-| `get_deploy` | Get deploy by ID |
-| `list_environments` | List environments |
-| `list_users` | List all users |
-| `get_user` | Get user by ID |
+| Tool                  | Description                                                   |
+| --------------------- | ------------------------------------------------------------- |
+| `list_items`          | List items with optional filters (status, level, environment) |
+| `get_item`            | Get item by internal ID                                       |
+| `get_item_by_counter` | Get item by project counter number                            |
+| `list_occurrences`    | List occurrences, optionally filtered by item ID              |
+| `get_occurrence`      | Get a single occurrence                                       |
+| `list_projects`       | List all projects                                             |
+| `get_project`         | Get project by ID                                             |
+| `list_deploys`        | List deploys with optional filters                            |
+| `get_deploy`          | Get deploy by ID                                              |
+| `list_environments`   | List environments                                             |
+| `list_users`          | List all users                                                |
+| `get_user`            | Get user by ID                                                |
 
 ## Architecture
 

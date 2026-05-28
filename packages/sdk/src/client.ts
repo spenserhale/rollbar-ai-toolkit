@@ -7,8 +7,15 @@ import type {
   RollbarEnvironment,
   RollbarUser,
   ListItemsParams,
+  ListItemsResult,
   ListOccurrencesParams,
+  ListOccurrencesResult,
   ListDeploysParams,
+  ListDeploysResult,
+  GetItemDetailedParams,
+  ItemDetailed,
+  TopItemDetailsParams,
+  TopItemDetails,
 } from "./types.js";
 import { RollbarConfigSchema, ErrorResponseSchema } from "./types.js";
 import { RollbarError, RollbarAuthError, RollbarNotFoundError } from "./errors.js";
@@ -28,7 +35,7 @@ export class RollbarClient {
     token: string,
     method: string,
     path: string,
-    body?: unknown
+    body?: unknown,
   ): Promise<T> {
     const url = `${this.config.baseUrl}${path}`;
 
@@ -51,21 +58,16 @@ export class RollbarClient {
       const parsed = ErrorResponseSchema.safeParse(errorBody);
 
       throw new RollbarError(
-        parsed.success && parsed.data.message
-          ? parsed.data.message
-          : `HTTP ${res.status}`,
+        parsed.success && parsed.data.message ? parsed.data.message : `HTTP ${res.status}`,
         String(res.status),
-        res.status
+        res.status,
       );
     }
 
     const json = (await res.json()) as { err: number; result: T; message?: string };
 
     if (json.err !== 0) {
-      throw new RollbarError(
-        json.message ?? "Unknown Rollbar API error",
-        String(json.err)
-      );
+      throw new RollbarError(json.message ?? "Unknown Rollbar API error", String(json.err));
     }
 
     return json.result;
@@ -83,7 +85,7 @@ export class RollbarClient {
   // Items (project-scoped)
   // -------------------------------------------------------------------------
 
-  async listItems(params: ListItemsParams = {}): Promise<{ items: RollbarItem[] }> {
+  async listItems(params: ListItemsParams = {}): Promise<ListItemsResult> {
     const query = new URLSearchParams();
     if (params.status) query.set("status", params.status);
     if (params.level) query.set("level", params.level);
@@ -110,25 +112,77 @@ export class RollbarClient {
   // Occurrences (project-scoped)
   // -------------------------------------------------------------------------
 
-  async listOccurrences(
-    params: ListOccurrencesParams = {}
-  ): Promise<{ instances: RollbarOccurrence[] }> {
+  async listOccurrences(params: ListOccurrencesParams = {}): Promise<ListOccurrencesResult> {
     const query = new URLSearchParams();
     if (params.limit) query.set("limit", String(params.limit));
     if (params.page) query.set("page", String(params.page));
     const qs = query.toString();
 
     if (params.itemId) {
-      return this.projectRequest(
-        "GET",
-        `/item/${params.itemId}/instances${qs ? `?${qs}` : ""}`
-      );
+      return this.projectRequest("GET", `/item/${params.itemId}/instances${qs ? `?${qs}` : ""}`);
     }
     return this.projectRequest("GET", `/instances${qs ? `?${qs}` : ""}`);
   }
 
   async getOccurrence(id: string): Promise<RollbarOccurrence> {
     return this.projectRequest("GET", `/instance/${id}`);
+  }
+
+  // -------------------------------------------------------------------------
+  // Item Detailed (item + latest occurrence combined)
+  // -------------------------------------------------------------------------
+
+  async getItemDetailed(itemId: number, params: GetItemDetailedParams = {}): Promise<ItemDetailed> {
+    const item = await this.getItem(itemId);
+    return this.enrichItemWithOccurrence(item, params);
+  }
+
+  async getItemDetailedByUuid(
+    uuid: string,
+    params: GetItemDetailedParams = {},
+  ): Promise<ItemDetailed> {
+    const item = await this.getItemByUuid(uuid);
+    return this.enrichItemWithOccurrence(item, params);
+  }
+
+  async listTopItemDetails(params: TopItemDetailsParams = {}): Promise<TopItemDetails[]> {
+    const {
+      window: windowStr = "30d",
+      limit = 10,
+      status = "active",
+      level,
+      environment,
+      includeVars,
+    } = params;
+
+    const minTimestamp = parseWindow(windowStr);
+    const { items } = await this.listItems({ status, level, environment, limit: 100 });
+
+    const ranked = items
+      .filter((item) => item.last_occurrence_timestamp >= minTimestamp)
+      .sort((a, b) => b.total_occurrences - a.total_occurrences)
+      .slice(0, limit);
+
+    return Promise.all(
+      ranked.map((item, i) =>
+        this.enrichItemWithOccurrence(item, { includeVars }).then((d) => ({ ...d, rank: i + 1 })),
+      ),
+    );
+  }
+
+  private async enrichItemWithOccurrence(
+    item: RollbarItem,
+    params: GetItemDetailedParams = {},
+  ): Promise<ItemDetailed> {
+    const { instances } = await this.listOccurrences({ itemId: item.id, limit: 1 });
+    let latestOccurrence = instances[0] ?? null;
+    if (latestOccurrence && !params.includeVars) {
+      latestOccurrence = {
+        ...latestOccurrence,
+        body: stripVarsFromBody(latestOccurrence.body),
+      };
+    }
+    return { item, latestOccurrence };
   }
 
   // -------------------------------------------------------------------------
@@ -147,18 +201,15 @@ export class RollbarClient {
   // Deploys (project-scoped)
   // -------------------------------------------------------------------------
 
-  async listDeploys(
-    params: ListDeploysParams = {}
-  ): Promise<{ deploys: RollbarDeploy[] }> {
+  async listDeploys(params: ListDeploysParams = {}): Promise<ListDeploysResult> {
     const query = new URLSearchParams();
     if (params.environment) query.set("environment", params.environment);
     if (params.limit) query.set("limit", String(params.limit));
     if (params.page) query.set("page", String(params.page));
     const qs = query.toString();
 
-    const projectPath = params.projectId
-      ? `/project/${params.projectId}/deploys`
-      : "/deploys";
+    const projectId = params.projectId ?? this.config.projectId;
+    const projectPath = projectId ? `/project/${projectId}/deploys` : "/deploys";
     return this.projectRequest("GET", `${projectPath}${qs ? `?${qs}` : ""}`);
   }
 
@@ -170,12 +221,9 @@ export class RollbarClient {
   // Environments (project-scoped)
   // -------------------------------------------------------------------------
 
-  async listEnvironments(
-    projectId?: number
-  ): Promise<RollbarEnvironment[]> {
-    const path = projectId
-      ? `/project/${projectId}/environments`
-      : "/environments";
+  async listEnvironments(projectId?: number): Promise<RollbarEnvironment[]> {
+    const resolvedProjectId = projectId ?? this.config.projectId;
+    const path = resolvedProjectId ? `/project/${resolvedProjectId}/environments` : "/environments";
     return this.projectRequest("GET", path);
   }
 
@@ -190,4 +238,61 @@ export class RollbarClient {
   async getUser(id: number): Promise<RollbarUser> {
     return this.accountRequest("GET", `/user/${id}`);
   }
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+const WINDOW_UNITS: Record<string, number> = { h: 3600, d: 86400, w: 604800, m: 2592000 };
+
+function parseWindow(window: string): number {
+  const match = /^(\d+)(h|d|w|m)$/.exec(window);
+  if (!match) {
+    throw new Error(`Invalid window "${window}". Expected format: 24h, 7d, 30d, 12w, 3m`);
+  }
+  const seconds = WINDOW_UNITS[match[2]!]!;
+  return Math.floor(Date.now() / 1000) - Number(match[1]) * seconds;
+}
+
+const FRAME_VAR_KEYS = ["locals", "args", "kwargs", "varnames"];
+
+/** Strip local variables and arguments from stack trace frames to avoid leaking secrets. */
+function stripVarsFromBody(body: Record<string, unknown>): Record<string, unknown> {
+  const result = { ...body };
+
+  for (const key of ["trace", "trace_chain"] as const) {
+    const value = result[key];
+    if (!value) continue;
+
+    if (key === "trace" && isTrace(value)) {
+      result[key] = stripTraceVars(value);
+    } else if (key === "trace_chain" && Array.isArray(value)) {
+      result[key] = value.map((t) => (isTrace(t) ? stripTraceVars(t) : t));
+    }
+  }
+
+  return result;
+}
+
+function isTrace(v: unknown): v is { frames?: unknown[]; exception?: unknown } {
+  return typeof v === "object" && v !== null && "frames" in v;
+}
+
+function stripTraceVars(trace: { frames?: unknown[]; exception?: unknown }): {
+  frames?: unknown[];
+  exception?: unknown;
+} {
+  if (!Array.isArray(trace.frames)) return trace;
+  return {
+    ...trace,
+    frames: trace.frames.map((frame) => {
+      if (typeof frame !== "object" || frame === null) return frame;
+      const cleaned = { ...frame } as Record<string, unknown>;
+      for (const k of FRAME_VAR_KEYS) {
+        delete cleaned[k];
+      }
+      return cleaned;
+    }),
+  };
 }

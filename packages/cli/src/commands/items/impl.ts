@@ -1,7 +1,8 @@
 import { RollbarClient, resolveConfig } from "@rollbar-toolkit/sdk";
 import type { LocalContext } from "../../context.js";
+import { writeOutput, type OutputFlags } from "../../output.js";
 
-interface ListItemsFlags {
+interface ListItemsFlags extends OutputFlags {
   readonly status?: string;
   readonly level?: string;
   readonly environment?: string;
@@ -23,52 +24,52 @@ export async function list(this: LocalContext, flags: ListItemsFlags): Promise<v
     page: flags.page,
   });
 
-  this.process.stdout.write(JSON.stringify(result, null, 2) + "\n");
+  writeOutput(this.process.stdout, result, flags);
 }
 
-interface GetItemFlags {
+interface GetItemFlags extends OutputFlags {
   readonly token?: string;
 }
 
-export async function get(this: LocalContext, flags: GetItemFlags, id: number): Promise<void> {
+export async function get(this: LocalContext, flags: GetItemFlags, id: string): Promise<void> {
   const client = flags.token
     ? new RollbarClient(resolveConfig({ projectToken: flags.token }))
     : this.rollbar;
 
-  const result = await client.getItem(id);
-  this.process.stdout.write(JSON.stringify(result, null, 2) + "\n");
+  const result = await client.getItem(Number(id));
+  writeOutput(this.process.stdout, result, flags);
 }
 
-interface GetByCounterFlags {
+interface GetByCounterFlags extends OutputFlags {
   readonly token?: string;
 }
 
 export async function getByCounter(
   this: LocalContext,
   flags: GetByCounterFlags,
-  counter: number
+  counter: number,
 ): Promise<void> {
   const client = flags.token
     ? new RollbarClient(resolveConfig({ projectToken: flags.token }))
     : this.rollbar;
 
   const result = await client.getItemByCounter(counter);
-  this.process.stdout.write(JSON.stringify(result, null, 2) + "\n");
+  writeOutput(this.process.stdout, result, flags);
 }
 
-interface GetByUuidFlags {
+interface GetByUuidFlags extends OutputFlags {
   readonly token?: string;
 }
 
 export async function getByUuid(
   this: LocalContext,
   flags: GetByUuidFlags,
-  uuid: string
+  uuid: string,
 ): Promise<void> {
   const client = flags.token
     ? new RollbarClient(resolveConfig({ projectToken: flags.token }))
     : this.rollbar;
 
   const result = await client.getItemByUuid(uuid);
-  this.process.stdout.write(JSON.stringify(result, null, 2) + "\n");
+  writeOutput(this.process.stdout, result, flags);
 }

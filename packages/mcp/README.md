@@ -4,20 +4,20 @@ MCP server for Rollbar, built with [FastMCP](https://github.com/punkpeye/fastmcp
 
 ## Tools
 
-| Tool | Description |
-|------|-------------|
-| `list_items` | List items (error groups) with optional filters: status, level, environment, limit, page |
-| `get_item` | Get an item by its internal Rollbar item ID |
-| `get_item_by_counter` | Get an item by its project-scoped counter number (as shown in the Rollbar UI) |
-| `list_occurrences` | List occurrences (individual error instances), optionally filtered by item ID |
-| `get_occurrence` | Get a single occurrence by its occurrence ID |
-| `list_projects` | List all projects in the account |
-| `get_project` | Get a project by its project ID |
-| `list_deploys` | List deploys with optional filters: projectId, environment, limit, page |
-| `get_deploy` | Get a deploy by its deploy ID |
-| `list_environments` | List environments, optionally scoped to a specific project |
-| `list_users` | List all users in the account |
-| `get_user` | Get a user by their user ID |
+| Tool                  | Description                                                                              |
+| --------------------- | ---------------------------------------------------------------------------------------- |
+| `list_items`          | List items (error groups) with optional filters: status, level, environment, limit, page |
+| `get_item`            | Get an item by its internal Rollbar item ID                                              |
+| `get_item_by_counter` | Get an item by its project-scoped counter number (as shown in the Rollbar UI)            |
+| `list_occurrences`    | List occurrences (individual error instances), optionally filtered by item ID            |
+| `get_occurrence`      | Get a single occurrence by its occurrence ID                                             |
+| `list_projects`       | List all projects in the account                                                         |
+| `get_project`         | Get a project by its project ID                                                          |
+| `list_deploys`        | List deploys with optional filters: projectId, environment, limit, page                  |
+| `get_deploy`          | Get a deploy by its deploy ID                                                            |
+| `list_environments`   | List environments, optionally scoped to a specific project                               |
+| `list_users`          | List all users in the account                                                            |
+| `get_user`            | Get a user by their user ID                                                              |
 
 ## Setup with Claude Desktop
 

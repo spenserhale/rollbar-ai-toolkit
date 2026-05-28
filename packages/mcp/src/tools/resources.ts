@@ -25,10 +25,7 @@ export function registerResourceTools(server: FastMCP) {
         .enum(["debug", "info", "warning", "error", "critical"])
         .optional()
         .describe("Filter by severity level"),
-      environment: z
-        .string()
-        .optional()
-        .describe('Filter by environment name, e.g. "production"'),
+      environment: z.string().optional().describe('Filter by environment name, e.g. "production"'),
       limit: z
         .number()
         .int()
@@ -68,15 +65,72 @@ export function registerResourceTools(server: FastMCP) {
     description:
       "Get a Rollbar item by its project-scoped counter number (the number shown in the Rollbar UI).",
     parameters: z.object({
-      counter: z
-        .number()
-        .int()
-        .positive()
-        .describe("The project-scoped item counter number"),
+      counter: z.number().int().positive().describe("The project-scoped item counter number"),
     }),
     execute: async (args) => {
       const client = getClient();
       const result = await client.getItemByCounter(args.counter);
+      return JSON.stringify(result, null, 2);
+    },
+  });
+
+  server.addTool({
+    name: "get_item_detailed",
+    description:
+      "Get a Rollbar item together with its latest occurrence (including stack trace). By default, local variables are stripped from stack frames to avoid leaking secrets — set includeVars to true to include them.",
+    parameters: z.object({
+      itemId: z.number().int().positive().describe("The internal Rollbar item ID"),
+      includeVars: z
+        .boolean()
+        .default(false)
+        .describe(
+          "Include local variables / args from stack trace frames (default false, may contain secrets)",
+        ),
+    }),
+    execute: async (args) => {
+      const client = getClient();
+      const result = await client.getItemDetailed(args.itemId, {
+        includeVars: args.includeVars,
+      });
+      return JSON.stringify(result, null, 2);
+    },
+  });
+
+  server.addTool({
+    name: "list_top_item_details",
+    description:
+      "List the top N most-occurring Rollbar items in a time window, each enriched with its latest occurrence and stack trace. Useful for identifying the noisiest errors without making separate calls per item.",
+    parameters: z.object({
+      window: z
+        .string()
+        .default("30d")
+        .describe("Look-back window: 24h, 7d, 30d, 12w, 3m (default: 30d)"),
+      limit: z
+        .number()
+        .int()
+        .positive()
+        .max(50)
+        .default(10)
+        .describe("Number of top items to return (default 10, max 50)"),
+      status: z
+        .enum(["active", "resolved", "muted", "archived"])
+        .default("active")
+        .describe("Filter by item status (default: active)"),
+      level: z
+        .enum(["debug", "info", "warning", "error", "critical"])
+        .optional()
+        .describe("Filter by severity level"),
+      environment: z.string().optional().describe('Filter by environment name, e.g. "production"'),
+      includeVars: z
+        .boolean()
+        .default(false)
+        .describe(
+          "Include local variables from stack trace frames (default false, may contain secrets)",
+        ),
+    }),
+    execute: async (args) => {
+      const client = getClient();
+      const result = await client.listTopItemDetails(args);
       return JSON.stringify(result, null, 2);
     },
   });
@@ -173,10 +227,7 @@ export function registerResourceTools(server: FastMCP) {
         .positive()
         .optional()
         .describe("Filter deploys to a specific project ID"),
-      environment: z
-        .string()
-        .optional()
-        .describe('Filter by environment name, e.g. "production"'),
+      environment: z.string().optional().describe('Filter by environment name, e.g. "production"'),
       limit: z
         .number()
         .int()
@@ -217,8 +268,7 @@ export function registerResourceTools(server: FastMCP) {
 
   server.addTool({
     name: "list_environments",
-    description:
-      "List Rollbar environments, optionally scoped to a specific project.",
+    description: "List Rollbar environments, optionally scoped to a specific project.",
     parameters: z.object({
       projectId: z
         .number()
