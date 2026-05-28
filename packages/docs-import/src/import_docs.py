@@ -11,8 +11,10 @@ the URL is suffixed with `.md`. This script:
   4. Saves the original llms.txt as docs/api/llms.txt for the index
 
 Usage (from repo root):
-  bun run docs:import
+  bun run docs:import                      # incremental: only fetch missing pages
+  bun run docs:import:full                 # full: re-fetch all pages
   uv run --project packages/docs-import python packages/docs-import/src/import_docs.py
+  uv run --project packages/docs-import python packages/docs-import/src/import_docs.py --mode full
   uv run --project packages/docs-import python packages/docs-import/src/import_docs.py --concurrency 16
 """
 
@@ -99,6 +101,7 @@ async def run(output_dir: Path, concurrency: int, force: bool) -> int:
     output_dir.mkdir(parents=True, exist_ok=True)
     timeout = httpx.Timeout(30.0, connect=10.0)
     headers = {"User-Agent": USER_AGENT}
+    mode = "full" if force else "incremental"
 
     async with httpx.AsyncClient(
         http2=False, timeout=timeout, headers=headers, follow_redirects=True
@@ -108,9 +111,20 @@ async def run(output_dir: Path, concurrency: int, force: bool) -> int:
         (output_dir / "llms.txt").write_text(manifest, encoding="utf-8")
 
         urls = sorted({m.group(0) for m in MD_URL_RE.finditer(manifest)})
-        print(f"Found {len(urls)} markdown URLs. Fetching with concurrency={concurrency}")
-        if not force:
-            print("(re-run with --force to refetch already-downloaded pages)")
+        existing = sum(1 for u in urls if url_to_output_path(u, output_dir).exists())
+        missing = len(urls) - existing
+
+        print(f"Found {len(urls)} markdown URLs  ({existing} present, {missing} missing)")
+        print(f"Mode: {mode} — ", end="")
+        if force:
+            print(f"re-fetching all {len(urls)} pages  (concurrency={concurrency})")
+        else:
+            print(
+                f"fetching {missing} missing pages  (concurrency={concurrency})"
+                + ("" if missing else "  — nothing to do")
+            )
+            if missing == 0:
+                return 0
         print()
 
         semaphore = asyncio.Semaphore(concurrency)
@@ -129,10 +143,10 @@ async def run(output_dir: Path, concurrency: int, force: bool) -> int:
                 failed.append((url, info))
                 print(f"  FAIL  {url}: {info}")
 
-    total = len(urls)
+    to_fetch = len(urls) if force else missing
     print(
         f"\nDone. {ok} fetched, {skipped} skipped (already present), {len(failed)} failed "
-        f"out of {total} → {output_dir.relative_to(REPO_ROOT)}/"
+        f"out of {to_fetch} → {output_dir.relative_to(REPO_ROOT)}/"
     )
     if failed:
         print(f"\n{len(failed)} failed:")
@@ -147,12 +161,19 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--concurrency", type=int, default=5)
     parser.add_argument(
+        "--mode",
+        choices=["incremental", "full"],
+        default="incremental",
+        help="incremental: only fetch missing pages (default); full: re-fetch all pages",
+    )
+    parser.add_argument(
         "--force",
         action="store_true",
-        help="Refetch URLs even if a local file already exists",
+        help="Alias for --mode full (deprecated, prefer --mode full)",
     )
     args = parser.parse_args()
-    sys.exit(asyncio.run(run(args.output_dir, args.concurrency, args.force)))
+    force = args.force or (args.mode == "full")
+    sys.exit(asyncio.run(run(args.output_dir, args.concurrency, force)))
 
 
 if __name__ == "__main__":

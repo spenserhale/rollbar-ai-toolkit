@@ -46,7 +46,7 @@ docs/                  Agent + human policy docs (this layer) + imported Rollbar
 - `docs/api/docs/<slug>.md` — Rollbar guides (SDKs, integrations, account setup, etc.)
 - `docs/api/reference/<slug>.md` — Rollbar REST API reference pages
 
-This is a committed snapshot — grep it freely, but do not hand-edit. To refresh, run `bun run docs:import` (incremental; add `-- --force` to re-fetch existing files). The separate `packages/api-docs/docs/` is the machine-readable OpenAPI 3.0 spec for the same API; prefer it when you need exact schemas, `docs/api/reference/` when you need prose explanations and examples.
+This is a committed snapshot — grep it freely, but do not hand-edit. To refresh, run `bun run docs:import` (incremental: only fetches missing pages) or `bun run docs:import:full` (full refresh: re-fetches all pages). The separate `packages/api-docs/docs/` is the machine-readable OpenAPI 3.0 spec for the same API; prefer it when you need exact schemas, `docs/api/reference/` when you need prose explanations and examples.
 
 ## Progressive disclosure
 

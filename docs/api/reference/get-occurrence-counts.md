@@ -1,0 +1,149 @@
+<!-- source: https://docs.rollbar.com/reference/get-occurrence-counts.md -->
+
+# Get active occurrence counts
+
+Analogous to "Hourly Error/Critical Occurrences" and "Daily Error/Critical Occurrences" on the Project Dashboard.
+
+Returns an array of recent counts as `[timestamp, count]` pairs, where each count is the number of matching active occurrences in the time range `[timestamp, timestamp + bucket_size - 1]`.
+
+Timestamps are UNIX timestamps, in whole seconds.
+
+# Response
+```json
+{
+  "err": 0,
+  "result": [
+    [
+      // timestamp
+      1728561200,
+      // count (number of occurrences from time 1728561200 until time 1728564799)
+      0
+    ],
+    [
+      1728564800,
+      0
+    ],
+    [
+      1728568400,
+      0
+    ],
+    [
+      1728572000,
+      6
+    ]
+  ]
+}```
+
+# OpenAPI definition
+
+````json
+{
+  "openapi": "3.1.0",
+  "servers": [
+    {
+      "url": "https://api.rollbar.com"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Reports"
+    }
+  ],
+  "info": {
+    "title": "Rollbar API",
+    "version": "1.0",
+    "description": "# Getting Started\nThe Rollbar API provides a RESTful interface to much of the data in the\nsystem. It is used by our official libraries to report exceptions,\ndeploys, and other messages. It can be used to create notifiers for\nadditional languages, get data out to integrate with other systems, or\nwhatever else you can imagine. If the API is missing something you'd\nlike to see, please [let us know](support@rollbar.com).\n\n# Ping\nTo test whether you're able to ping the API server, you can simply run the\nfollowing command:\n\n```\ncurl 'https://api.rollbar.com/api/1/status/ping'\n```\n\nYou will get back pong from our server if your request was successful.\n\n# Timestamps\nAll timestamps (inputs and outputs) are GMT unix timestamps.\n\n# Authentication\nAuthentication is done via access token included as a header parameter. For authenticated requests, pass your access token\nthrough the `X-Rollbar-Access-Token` parameter in the header.\n\n```\ncurl -H \"X-Rollbar-Access-Token: YOUR_ACCESS_TOKEN\" 'https://api.rollbar.com/api/1/item/12345'\n```\n\n## Project access tokens\nMany operations require a project-specific access token. You can find and administer your\naccess tokens in Settings -> Project Access Tokens. Access tokens can have any or\nall of the following scopes:\n\n### post_server_item\nCan perform all POST requests to /deploy/ and /item/. Can also be used to upload source maps (JS, proguard, dSym, flutter)\n\n### post_client_item\nCan perform POST requests to /item/, but only if the item has a client-side platform (browser, mobile)\n\n### read\nCan perform all GET requests\n\n### write\nCan perform PATCH and DELETE requests\n\n## Account Access Tokens\nOperations performed at the level of the account require an account-specific\naccess token. These can be found and managed at\n{Account name} Settings -> Account Access Tokens.\nAccount access tokens can have the following scopes:\n\n### read\nSupports all GET operations at the account level.\n\n### write\nSupports all POST, PUT, PATCH, and DELETE operations at the account level.\n\n# HTTP responses\nThe API can return the following HTTP response codes:\n\n### 200\tOK\nOperation was completed successfully\n\n### 400\tBad request\nThe request was malformed and could not be parsed.\n\n### 403\tAccess denied\nAccess token was missing, invalid, or does not have the necessary permissions.\n\n### 404\tNot found\nThe requested resource was not found. This response will be returned if the URL is entirely invalid (i.e. /asdf), or if it is a URL that could be valid but is referencing something that does not exist (i.e. /item/12345).\n\n### 413\tRequest entity too large\nThe request exceeded the maximum size of 128KB.\n\n### 422\tUnprocessable Entity\nThe request was parseable (i.e. valid JSON), but some parameters were missing or otherwise invalid.\n\n### 429\tToo Many Requests\nIf rate limiting is enabled for your access token, this return code signifies that\n\n# Examples\n\n### [api-examples](https://github.com/rollbar/api-examples)\nAuthor: Rollbar\n\nLanguage: Python\n\nExamples using RQL, deploys, occurrences, and reports\n\n### [api-people-example](https://github.com/rollbar/api-people-example)\nAuthor: Rollbar\n\nLanguage: Python\n\nShows how to gather the Person data for each occurrence of a list of items\n\n### [rolltools](https://github.com/jslate/rolltools)\nAuthor: Jonathan Slate\n\nLanguage: Ruby\n\nA few utilities using the Rollbar API\n"
+  },
+  "paths": {
+    "/api/1/reports/occurrence_counts": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Get active occurrence counts",
+        "description": "Analogous to \"Hourly Error/Critical Occurrences\" and \"Daily Error/Critical Occurrences\" on the Project Dashboard.\n\nReturns an array of recent counts as `[timestamp, count]` pairs, where each count is the number of matching active occurrences in the time range `[timestamp, timestamp + bucket_size - 1]`.\n\nTimestamps are UNIX timestamps, in whole seconds.\n\n# Response\n```json\n{\n  \"err\": 0,\n  \"result\": [\n    [\n      // timestamp\n      1728561200,\n      // count (number of occurrences from time 1728561200 until time 1728564799)\n      0\n    ],\n    [\n      1728564800,\n      0\n    ],\n    [\n      1728568400,\n      0\n    ],\n    [\n      1728572000,\n      6\n    ]\n  ]\n}```\n",
+        "operationId": "get-occurrence-counts",
+        "parameters": [
+          {
+            "$ref": "#/paths/~1api~11~1instances/get/parameters/0"
+          },
+          {
+            "name": "bucket_size",
+            "in": "query",
+            "description": "Size of each bucket, in seconds. Valid values are `60` (minute), `3600` (hour), and `86400` (day). Timezone for all buckets is GMT.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "86400"
+            }
+          },
+          {
+            "name": "environments",
+            "in": "query",
+            "description": "Comma-separated list of environments to filter by.  Empty means \"any environment\".",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "min_level",
+            "in": "query",
+            "description": "Minimum item level to filter by. One of `debug`, `info`, `warning`, `error`, or `critical`.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "error"
+            }
+          },
+          {
+            "name": "max_level",
+            "in": "query",
+            "description": "Maximum item level to filter by. One of `debug`, `info`, `warning`, `error`, or `critical`",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "query",
+            "description": "Item ID to filter by.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true
+  },
+  "_id": {
+    "buffer": {
+      "0": 98,
+      "1": 222,
+      "2": 158,
+      "3": 27,
+      "4": 99,
+      "5": 22,
+      "6": 195,
+      "7": 4,
+      "8": 3,
+      "9": 77,
+      "10": 0,
+      "11": 106
+    }
+  }
+}
+````

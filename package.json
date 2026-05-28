@@ -15,6 +15,7 @@
     "dev:cli": "vp dev --filter @rollbar-toolkit/cli",
     "docs:generate": "bun run packages/api-docs/src/index.ts",
     "docs:import": "uv run --project packages/docs-import python packages/docs-import/src/import_docs.py",
+    "docs:import:full": "uv run --project packages/docs-import python packages/docs-import/src/import_docs.py --mode full",
     "docs:clean": "rm -rf docs/api",
     "test": "vp test",
     "check": "vp check",
