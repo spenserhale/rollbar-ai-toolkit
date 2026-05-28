@@ -8,10 +8,16 @@ import { projectsRoutes } from "./commands/projects/commands.js";
 import { deploysRoutes } from "./commands/deploys/commands.js";
 import { environmentsRoutes } from "./commands/environments/commands.js";
 import { usersRoutes } from "./commands/users/commands.js";
+import { rqlJobsRoutes } from "./commands/rql-jobs/commands.js";
 import { agentContextCommand } from "./commands/agent-context/commands.js";
 import { profileRoutes } from "./commands/profile/commands.js";
 import { feedbackRoutes } from "./commands/feedback/commands.js";
 import { ValidationError } from "./validation.js";
+
+const rqlRoutes = buildRouteMap({
+  routes: { jobs: rqlJobsRoutes },
+  docs: { brief: "Rollbar Query Language (RQL) — submit and read async queries" },
+});
 
 const routes = buildRouteMap({
   routes: {
@@ -23,6 +29,7 @@ const routes = buildRouteMap({
     deploys: deploysRoutes,
     environments: environmentsRoutes,
     users: usersRoutes,
+    rql: rqlRoutes,
     profile: profileRoutes,
     feedback: feedbackRoutes,
     "agent-context": agentContextCommand,
@@ -47,7 +54,7 @@ const text = {
 export const app = buildApplication(routes, {
   name: "rollbar",
   versionInfo: {
-    currentVersion: "0.1.0",
+    currentVersion: "0.2.0",
   },
   scanner: {
     // Accept --project-id (kebab) AND --projectId (camel) on input; render kebab in --help.

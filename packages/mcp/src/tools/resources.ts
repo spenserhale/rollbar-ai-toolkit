@@ -311,4 +311,96 @@ export function registerResourceTools(server: FastMCP) {
       return JSON.stringify(result, null, 2);
     },
   });
+
+  // ---------------------------------------------------------------------------
+  // RQL (Rollbar Query Language) jobs
+  //
+  // Async: create returns a queued job, status transitions through
+  // new -> running -> success/failed/cancelled/timed_out. Results live behind
+  // a separate `get_rql_job_results` endpoint. The agent composes the poll loop
+  // (the CLI's `--wait` is a CLI affordance; MCP tools stay primitive).
+  // ---------------------------------------------------------------------------
+
+  server.addTool({
+    name: "create_rql_job",
+    description:
+      "Submit an RQL query as a job. Returns immediately with a queued job. Always include `LIMIT 10` or `LIMIT 100` in the query — unbounded queries can run for minutes and may time out. Poll status via get_rql_job; fetch rows via get_rql_job_results once status is 'success'.",
+    parameters: z.object({
+      queryString: z
+        .string()
+        .describe('The RQL query, e.g. "SELECT * FROM item_occurrence LIMIT 10"'),
+      forceRefresh: z
+        .boolean()
+        .default(false)
+        .describe("Bypass Rollbar's query cache and force a fresh execution (default false)"),
+    }),
+    execute: async (args) => {
+      const client = getClient();
+      const result = await client.createRqlJob(args);
+      return JSON.stringify(result, null, 2);
+    },
+  });
+
+  server.addTool({
+    name: "list_rql_jobs",
+    description: "List RQL jobs for the project (or account, with an account token).",
+    parameters: z.object({
+      page: z
+        .number()
+        .int()
+        .positive()
+        .default(1)
+        .describe("Page number for pagination (default 1)"),
+    }),
+    execute: async (args) => {
+      const client = getClient();
+      const result = await client.listRqlJobs(args);
+      return JSON.stringify(result, null, 2);
+    },
+  });
+
+  server.addTool({
+    name: "get_rql_job",
+    description:
+      "Check the status of an RQL job. Status is one of new, running, success, failed, cancelled, timed_out.",
+    parameters: z.object({
+      id: z.number().int().positive().describe("The RQL job ID"),
+      expandResult: z
+        .boolean()
+        .default(false)
+        .describe("Include the job's result inline (?expand=result)"),
+    }),
+    execute: async (args) => {
+      const client = getClient();
+      const result = await client.getRqlJob(args.id, { expandResult: args.expandResult });
+      return JSON.stringify(result, null, 2);
+    },
+  });
+
+  server.addTool({
+    name: "get_rql_job_results",
+    description:
+      "Fetch the rows of a completed RQL job (call after get_rql_job returns status 'success').",
+    parameters: z.object({
+      id: z.number().int().positive().describe("The RQL job ID"),
+    }),
+    execute: async (args) => {
+      const client = getClient();
+      const result = await client.getRqlJobResults(args.id);
+      return JSON.stringify(result, null, 2);
+    },
+  });
+
+  server.addTool({
+    name: "cancel_rql_job",
+    description: "Cancel an in-flight RQL job. Transitions the job's status to 'cancelled'.",
+    parameters: z.object({
+      id: z.number().int().positive().describe("The RQL job ID"),
+    }),
+    execute: async (args) => {
+      const client = getClient();
+      const result = await client.cancelRqlJob(args.id);
+      return JSON.stringify(result, null, 2);
+    },
+  });
 }

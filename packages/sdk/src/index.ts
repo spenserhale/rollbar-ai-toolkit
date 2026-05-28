@@ -19,6 +19,15 @@ export type {
   ItemDetailed,
   TopItemDetailsParams,
   TopItemDetails,
+  RqlJob,
+  RqlJobStatus,
+  RqlTerminalStatus,
+  RqlJobResult,
+  RqlJobResultPayload,
+  CreateRqlJobParams,
+  ListRqlJobsParams,
+  GetRqlJobParams,
+  WaitForRqlJobOptions,
   ErrorResponse,
 } from "./types.js";
 export {
@@ -29,5 +38,10 @@ export {
   RollbarDeploySchema,
   RollbarEnvironmentSchema,
   RollbarUserSchema,
+  RqlJobSchema,
+  RqlJobResultSchema,
+  RqlJobResultPayloadSchema,
+  RQL_STATUSES,
+  RQL_TERMINAL_STATUSES,
   ErrorResponseSchema,
 } from "./types.js";

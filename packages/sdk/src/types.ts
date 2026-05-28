@@ -177,6 +177,75 @@ export const RollbarEnvironmentSchema = z.object({
 export type RollbarEnvironment = z.infer<typeof RollbarEnvironmentSchema>;
 
 // ---------------------------------------------------------------------------
+// RQL (Rollbar Query Language) jobs
+// ---------------------------------------------------------------------------
+
+export const RQL_TERMINAL_STATUSES = ["success", "failed", "cancelled", "timed_out"] as const;
+export const RQL_STATUSES = ["new", "running", ...RQL_TERMINAL_STATUSES] as const;
+
+export type RqlJobStatus = (typeof RQL_STATUSES)[number];
+export type RqlTerminalStatus = (typeof RQL_TERMINAL_STATUSES)[number];
+
+export const RqlJobSchema = z.object({
+  id: z.number(),
+  project_id: z.number(),
+  query_string: z.string(),
+  status: z.enum(RQL_STATUSES),
+  job_hash: z.string(),
+  date_created: z.number(),
+  date_modified: z.number(),
+  result: z.unknown().optional(),
+});
+
+export type RqlJob = z.infer<typeof RqlJobSchema>;
+
+export const RqlJobResultPayloadSchema = z.object({
+  rows: z.array(z.unknown()).optional(),
+  selectionColumns: z.array(z.string()).optional(),
+  columns: z.array(z.unknown()).optional(),
+  errors: z.array(z.unknown()).optional(),
+  warnings: z.array(z.unknown()).optional(),
+  rowcount: z.number().optional(),
+  executionTime: z.number().optional(),
+});
+
+export type RqlJobResultPayload = z.infer<typeof RqlJobResultPayloadSchema>;
+
+export const RqlJobResultSchema = z.object({
+  job_id: z.number(),
+  result: RqlJobResultPayloadSchema,
+  job: RqlJobSchema.optional(),
+});
+
+export type RqlJobResult = z.infer<typeof RqlJobResultSchema>;
+
+export interface CreateRqlJobParams {
+  queryString: string;
+  /** When true, bypasses Rollbar's cache and forces a fresh execution. */
+  forceRefresh?: boolean;
+}
+
+export interface ListRqlJobsParams {
+  page?: number;
+}
+
+export interface GetRqlJobParams {
+  /** When true, fetches the job with `?expand=result` so the result is included inline. */
+  expandResult?: boolean;
+}
+
+export interface WaitForRqlJobOptions {
+  /** Max wall-clock time to wait before giving up. Default: 300_000 (5 min). */
+  timeoutMs?: number;
+  /** Initial poll interval. Each poll backs off up to maxIntervalMs. Default: 1_000. */
+  initialIntervalMs?: number;
+  /** Maximum poll interval after backoff. Default: 10_000. */
+  maxIntervalMs?: number;
+  /** When the wait times out (per `timeoutMs`), throw instead of returning the last-seen job. Default: true. */
+  throwOnTimeout?: boolean;
+}
+
+// ---------------------------------------------------------------------------
 // Users
 // ---------------------------------------------------------------------------
 

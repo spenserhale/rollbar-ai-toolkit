@@ -3,7 +3,7 @@ import { registerResourceTools } from "./tools/resources.js";
 
 const server = new FastMCP({
   name: "rollbar-toolkit",
-  version: "0.1.0",
+  version: "0.2.0",
 });
 
 // Register tool groups

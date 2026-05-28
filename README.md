@@ -59,6 +59,14 @@ rollbar deploys get 111                     # Get deploy details
 rollbar environments list                   # List environments
 rollbar users list                          # List users
 rollbar users get 99                        # Get user details
+
+# RQL (Rollbar Query Language) — async; tip: always include LIMIT 10 / LIMIT 100
+rollbar rql jobs create "SELECT * FROM item_occurrence LIMIT 10"           # submit, returns job id
+rollbar rql jobs create "SELECT * FROM item_occurrence LIMIT 10" --wait    # submit, poll, return rows
+rollbar rql jobs list                        # List recent RQL jobs
+rollbar rql jobs get 12345                   # Check status of an RQL job
+rollbar rql jobs results 12345               # Fetch rows from a completed RQL job
+rollbar rql jobs cancel 12345 --force        # Cancel an in-flight RQL job
 ```
 
 Every command accepts `--token` to override the default token for that request.
@@ -118,6 +126,11 @@ Or if using Bun instead of the compiled binary:
 | `list_environments`   | List environments                                             |
 | `list_users`          | List all users                                                |
 | `get_user`            | Get user by ID                                                |
+| `create_rql_job`      | Submit an RQL query; returns a queued job (always LIMIT it)   |
+| `list_rql_jobs`       | List RQL jobs                                                 |
+| `get_rql_job`         | Check status of an RQL job                                    |
+| `get_rql_job_results` | Fetch rows of a completed RQL job                             |
+| `cancel_rql_job`      | Cancel an in-flight RQL job                                   |
 
 ## Architecture
 

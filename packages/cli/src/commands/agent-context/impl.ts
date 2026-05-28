@@ -65,6 +65,18 @@ export async function agentContext(this: LocalContext): Promise<void> {
       local_log: "~/.rollbar/feedback.jsonl",
       upstream_env: "ROLLBAR_FEEDBACK_ENDPOINT (POSTs each entry when set)",
     },
+    rql: {
+      async: true,
+      lifecycle: "new -> running -> success | failed | cancelled | timed_out",
+      query_limit_guidance:
+        "Always include LIMIT 10 or LIMIT 100 in the RQL query — unbounded queries can run for minutes and may time out.",
+      wait_flag:
+        "--wait (rql jobs create) — blocks until terminal status and fetches results on success",
+      polling:
+        "exponential backoff with jitter; configurable via --timeout (seconds) and --poll-interval (seconds)",
+      no_local_ledger:
+        "Rollbar dedupes by query (force_refresh=false default); use `rollbar rql jobs list` for server-side history",
+    },
     commands: describeTarget(app.root),
   };
   this.process.stdout.write(JSON.stringify(schema, null, 2) + "\n");

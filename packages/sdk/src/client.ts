@@ -16,8 +16,14 @@ import type {
   ItemDetailed,
   TopItemDetailsParams,
   TopItemDetails,
+  RqlJob,
+  RqlJobResult,
+  CreateRqlJobParams,
+  ListRqlJobsParams,
+  GetRqlJobParams,
+  WaitForRqlJobOptions,
 } from "./types.js";
-import { RollbarConfigSchema, ErrorResponseSchema } from "./types.js";
+import { RollbarConfigSchema, ErrorResponseSchema, RQL_TERMINAL_STATUSES } from "./types.js";
 import { RollbarError, RollbarAuthError, RollbarNotFoundError } from "./errors.js";
 
 export class RollbarClient {
@@ -238,6 +244,81 @@ export class RollbarClient {
   async getUser(id: number): Promise<RollbarUser> {
     return this.accountRequest("GET", `/user/${id}`);
   }
+
+  // -------------------------------------------------------------------------
+  // RQL (Rollbar Query Language) jobs
+  //
+  // RQL jobs are asynchronous: create returns immediately with a queued job,
+  // status transitions through new -> running -> success/failed/cancelled/timed_out,
+  // and results live behind a separate /result endpoint.
+  // -------------------------------------------------------------------------
+
+  async createRqlJob(params: CreateRqlJobParams): Promise<RqlJob> {
+    return this.projectRequest("POST", "/rql/jobs/", {
+      query_string: params.queryString,
+      ...(params.forceRefresh !== undefined ? { force_refresh: params.forceRefresh } : {}),
+    });
+  }
+
+  async listRqlJobs(params: ListRqlJobsParams = {}): Promise<RqlJob[]> {
+    const query = new URLSearchParams();
+    if (params.page) query.set("page", String(params.page));
+    const qs = query.toString();
+    return this.projectRequest("GET", `/rql/jobs/${qs ? `?${qs}` : ""}`);
+  }
+
+  async getRqlJob(id: number, params: GetRqlJobParams = {}): Promise<RqlJob> {
+    const qs = params.expandResult ? "?expand=result" : "";
+    return this.projectRequest("GET", `/rql/job/${id}${qs}`);
+  }
+
+  async getRqlJobResults(id: number): Promise<RqlJobResult> {
+    return this.projectRequest("GET", `/rql/job/${id}/result`);
+  }
+
+  async cancelRqlJob(id: number): Promise<RqlJob> {
+    return this.projectRequest("POST", `/rql/job/${id}/cancel`);
+  }
+
+  // Poll getRqlJob until the job reaches a terminal status (success/failed/cancelled/timed_out)
+  // or the wall-clock timeout elapses. Uses exponential backoff with jitter so a slow
+  // query doesn't hammer the API. Callers fetch results separately via getRqlJobResults.
+  async waitForRqlJob(id: number, options: WaitForRqlJobOptions = {}): Promise<RqlJob> {
+    const timeoutMs = options.timeoutMs ?? 300_000;
+    const initialIntervalMs = options.initialIntervalMs ?? 1_000;
+    const maxIntervalMs = options.maxIntervalMs ?? 10_000;
+    const throwOnTimeout = options.throwOnTimeout ?? true;
+
+    const deadline = Date.now() + timeoutMs;
+    let interval = initialIntervalMs;
+    let job = await this.getRqlJob(id);
+
+    while (!isTerminalRqlStatus(job.status)) {
+      if (Date.now() >= deadline) {
+        if (throwOnTimeout) {
+          throw new RollbarError(
+            `Timed out after ${timeoutMs}ms waiting for RQL job ${id} (last status: ${job.status})`,
+            "rql_wait_timeout",
+          );
+        }
+        return job;
+      }
+
+      const jitter = Math.random() * interval * 0.25;
+      const sleepMs = Math.min(interval + jitter, deadline - Date.now());
+      if (sleepMs <= 0) continue;
+      await new Promise((resolve) => setTimeout(resolve, sleepMs));
+      interval = Math.min(interval * 2, maxIntervalMs);
+
+      job = await this.getRqlJob(id);
+    }
+
+    return job;
+  }
+}
+
+function isTerminalRqlStatus(status: string): boolean {
+  return (RQL_TERMINAL_STATUSES as readonly string[]).includes(status);
 }
 
 // ---------------------------------------------------------------------------
