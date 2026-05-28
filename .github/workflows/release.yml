@@ -66,12 +66,8 @@ jobs:
             --external @valibot/to-json-schema \
             --external effect
 
-      - name: Add .exe extension on Windows
-        if: matrix.suffix == 'windows-x64'
-        shell: bash
-        run: |
-          mv dist/rollbar-windows-x64 dist/rollbar-windows-x64.exe
-          mv dist/rollbar-mcp-windows-x64 dist/rollbar-mcp-windows-x64.exe
+      # Bun's --compile auto-appends .exe for bun-windows-* targets, so the
+      # outfile lands at e.g. dist/rollbar-windows-x64.exe directly — no rename needed.
 
       - name: Smoke test (linux-x64 only)
         if: matrix.suffix == 'linux-x64'
