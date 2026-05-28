@@ -1,4 +1,11 @@
 import { writeFileSync, mkdirSync } from "fs";
+
+// See generators/openapi.ts — same rationale: scrub Rollbar's example Slack
+// webhook URLs that GitHub secret-scanning blocks even though they're placeholders.
+const SLACK_WEBHOOK_PLACEHOLDER_RE =
+  /https:\/\/hooks\.slack\.com\/services\/T[0-9A-Z]+\/B[0-9A-Z]+\/[0-9A-Za-z]+/g;
+const SLACK_WEBHOOK_REPLACEMENT = "https://hooks.slack.com/services/EXAMPLE";
+const scrub = (s: string) => s.replace(SLACK_WEBHOOK_PLACEHOLDER_RE, SLACK_WEBHOOK_REPLACEMENT);
 import { join, dirname } from "path";
 import type { OpenAPISpec, Operation, PathItem, Parameter, Schema } from "../types.js";
 
@@ -68,7 +75,7 @@ export async function generateMarkdownDocs(spec: OpenAPISpec, outDir: string): P
       spec.components?.schemas || {},
     );
 
-    writeFileSync(filePath, content);
+    writeFileSync(filePath, scrub(content));
     console.log(`✓ Wrote ${filePath}`);
   }
 
@@ -131,7 +138,7 @@ Generated from official OpenAPI 3.0.1 specification.
 
   const indexPath = join(outDir, "README.md");
   mkdirSync(outDir, { recursive: true });
-  writeFileSync(indexPath, markdown);
+  writeFileSync(indexPath, scrub(markdown));
   console.log(`✓ Wrote ${indexPath}`);
 }
 
