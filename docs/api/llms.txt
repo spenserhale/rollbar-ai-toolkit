@@ -1,0 +1,418 @@
+# Rollbar Docs Documentation
+
+## Guides
+- [Overview](https://docs.rollbar.com/docs/getting-started.md)
+- [Directory](https://docs.rollbar.com/docs/directory.md)
+- [Apple](https://docs.rollbar.com/docs/apple.md): Rollbar SDK for Apple platforms | Support Level: Supported
+- [Apple Unified Logging](https://docs.rollbar.com/docs/sdk-module-rollbaraul.md): This module implements `RollbarNotifier` integration with Apple Unified Logging (AUL) and allows capture of the AUL entries as corresponding Rollbar Telemetry log events.
+- [Legacy iOS SDK (Deprecated)](https://docs.rollbar.com/docs/ios.md): Objective-C library for crash reporting and logging for iOS and macOS
+- [Go](https://docs.rollbar.com/docs/go.md): Rollbar SDK for Go | Support Level: Supported
+- [Javascript (Browser & Node.js)](https://docs.rollbar.com/docs/javascript.md): Rollbar SDK for client-side Javascript | Support Level: Supported
+- [Browser JS](https://docs.rollbar.com/docs/browser-js.md): How to configure Rollbar.js to work in the browser | Support Level: Supported
+- [Node.js](https://docs.rollbar.com/docs/nodejs.md): How to configure Rollbar.js to work with your Node.js app | Support Level: Supported
+- [React](https://docs.rollbar.com/docs/react.md): This Rollbar React SDK | Support Level: Supported
+- [React (Typescript)](https://docs.rollbar.com/docs/react-ts.md): Rollbar SDK for Typescript React applications | Support Level: Supported
+- [Angular 2](https://docs.rollbar.com/docs/angular.md): Rollbar SDK for Angular 2+ | Support Level: Supported
+- [Vue.js](https://docs.rollbar.com/docs/vue-js.md): Configuring Vue apps to use the Rollbar JavaScript SDK | Support Level: Supported
+- [Next.js](https://docs.rollbar.com/docs/nextjs.md): Error reporting with Rollbar and Next.js | Support Level: Supported
+- [Svelte](https://docs.rollbar.com/docs/svelte.md): Installing Rollbar SDK in the Svelte Framework | Support Level:  Community
+- [Using Rollbar.js inside an embedded component](https://docs.rollbar.com/docs/using-rollbarjs-inside-an-embedded-component.md)
+- [Upgrading from node_rollbar](https://docs.rollbar.com/docs/upgrading-from-node_rollbar.md)
+- [JavaScript Telemetry](https://docs.rollbar.com/docs/rollbarjs-telemetry.md): Telemetry information for rollbar.js
+- [Configuration and Method Reference](https://docs.rollbar.com/docs/rollbarjs-configuration-reference.md): Configuration options for rollbar.js
+- [Importing or Requiring Rollbar](https://docs.rollbar.com/docs/importing-or-requiring-rollbar.md)
+- [Java](https://docs.rollbar.com/docs/java.md): Rollbar SDK for Java and Android | Support Level: Supported
+- [Android](https://docs.rollbar.com/docs/android.md): How to configure rollbar-java to work with your Android app
+- [Spring](https://docs.rollbar.com/docs/spring.md): How to configure Rollbar with Java Spring
+- [Web (Servlet)](https://docs.rollbar.com/docs/web.md): How to configure rollbar-java to work with your web app
+- [Reactive Streams](https://docs.rollbar.com/docs/reactive-streams.md): Integrating Rollbar with Reactive Streams
+- [.NET and .NET Core](https://docs.rollbar.com/docs/net-v5.md): Rollbar SDK for .NET & .NET Core | Support Level: Supported
+- [SDK Overview](https://docs.rollbar.com/docs/sdk-overview.md): The Big Picture
+- [SDK Modules](https://docs.rollbar.com/docs/sdk-modules.md): SDK Packaging Strategy
+- [SDK Core Abstractions](https://docs.rollbar.com/docs/core-abstractions-of-the-sdk.md): Application Domain Language of the SDK
+- [SDK Usage How-Tos](https://docs.rollbar.com/docs/sdk-usage-how-tos.md): How-To by Example
+- [.NET v4](https://docs.rollbar.com/docs/dotnet.md): Rollbar Notifier SDK v4 for any .NET-based technology stack
+- [SDK Overview](https://docs.rollbar.com/docs/overview.md): Components that constitute the SDK
+- [Rollbar .NET SDK Versioning & Releases](https://docs.rollbar.com/docs/rollbar-net-sdk-versioning-releases.md)
+- [Upgrade paths across incompatible version changes](https://docs.rollbar.com/docs/upgrade-paths-across-incompatible-version-changes.md): How-to recipes when upgrading the SDK from one major version to another
+- [Basic Usage](https://docs.rollbar.com/docs/basic-usage.md): Use of the key API to get you rolling
+- [Logger Configuration](https://docs.rollbar.com/docs/logger-configuration.md): Configure its behavior as you wish.
+- [More Advanced Logger Usages](https://docs.rollbar.com/docs/more-advanced-logger-usages.md): You've got the power!
+- [.NET Telemetry](https://docs.rollbar.com/docs/telemetry-1.md): Capture extra events that preceded your payloads...
+- [Monitoring the SDK Internal Events](https://docs.rollbar.com/docs/monitoring-the-sdk-internal-events.md): Do you want to know what's happening the inside and do you want to tap into it?
+- [Deployment Client API](https://docs.rollbar.com/docs/deployment-api.md): Track your software deployments metadata with Rollbar
+- [Integrating as a TraceListener](https://docs.rollbar.com/docs/integrating-as-a-tracelistener.md): Absolutely any .NET-based application that already uses the TraceListeners
+- [Integrating with ASP.NET Core 2 and Newer](https://docs.rollbar.com/docs/integrating-with-aspnet-core-2-and-newer.md)
+- [Integrating with ASP.NET MVC](https://docs.rollbar.com/docs/asp-net-mvc.md): Creating an MVC error handler for the .NET SDK
+- [Integrating with ASP.NET Web Forms based Applications](https://docs.rollbar.com/docs/integrating-with-aspnet-web-forms-based-applications.md)
+- [Integrating with Xamarin](https://docs.rollbar.com/docs/xamarin.md): Xamarin error handling for the .NET SDK
+- [Integrating with Windows Forms based Applications](https://docs.rollbar.com/docs/integrating-with-windows-forms-based-applications.md)
+- [Integrating with WPF based Applications](https://docs.rollbar.com/docs/integrating-with-wpf-based-applications.md)
+- [Integrating with WorkerServices](https://docs.rollbar.com/docs/integrating-with-a-workerservice.md)
+- [Integrating as a TraceListener](https://docs.rollbar.com/docs/v5-integrating-as-a-tracelistener.md): Absolutely any .NET-based application that already uses the TraceListeners
+- [Integrating with WPF based Applications](https://docs.rollbar.com/docs/v5-integrating-with-wpf-based-applications.md)
+- [Integrating with Windows Forms based Applications](https://docs.rollbar.com/docs/v5-integrating-with-windows-forms-based-applications.md)
+- [Integrating with Xamarin Forms Application](https://docs.rollbar.com/docs/v5-integrating-with-xamarin.md): Xamarin Forms error handling for the .NET SDK
+- [Integrating with WorkerService](https://docs.rollbar.com/docs/integrating-with-workerservices-v5.md): Use Rollbar from within a WorkerService application
+- [Integrating with Blazor Webassembly application](https://docs.rollbar.com/docs/integrating-with-blazor-webassembly-application.md): Use Rollbar from within a Blazor Client
+- [Integrating with Blazor Server application](https://docs.rollbar.com/docs/integrating-with-blazor-server-application.md): Use Rollbar from within a Blazor Server
+- [Integrating with ASP.NET Core Application](https://docs.rollbar.com/docs/v5-integrating-with-aspnet-core-2-and-newer.md)
+- [Integrating with ASP.NET MVC](https://docs.rollbar.com/docs/v5-integrating-with-aspnet-mvc.md): Creating an MVC error handler for the .NET SDK
+- [Integrating with ASP.NET Web Forms based Applications](https://docs.rollbar.com/docs/v5-integrating-with-aspnet-web-forms-based-applications.md)
+- [PHP](https://docs.rollbar.com/docs/php.md): Rollbar SDK for PHP | Support Level: Supported
+- [Basic PHP Installation & Setup](https://docs.rollbar.com/docs/basic-php-installation-setup.md)
+- [PHP Telemetry](https://docs.rollbar.com/docs/php-telemetry.md)
+- [Heroku](https://docs.rollbar.com/docs/php-heroku.md): How to set up rollbar-php with Heroku
+- [Laravel](https://docs.rollbar.com/docs/laravel.md): Rollbar SDK for Laravel | Support Level: Supported
+- [WordPress](https://docs.rollbar.com/docs/wordpress.md): Rollbar SDK for WordPress | Support Level: Supported
+- [Configuration Reference](https://docs.rollbar.com/docs/php-configuration-reference.md): Configuration options for rollbar-php
+- [Integration with rollbar.js](https://docs.rollbar.com/docs/php-integration-with-rollbarjs.md): How integrate rollbar-php and rollbar.js
+- [Upgrading to v4](https://docs.rollbar.com/docs/upgrading-to-v4.md): Types are good, M'key?
+- [Python](https://docs.rollbar.com/docs/python.md): Support Level: Supported
+- [Celery](https://docs.rollbar.com/docs/celery.md): How to setup pyrollbar with Celery | Support Level: Supported
+- [Django](https://docs.rollbar.com/docs/django.md): How to setup pyrollbar with Django | Support Level: Supported
+- [FastAPI](https://docs.rollbar.com/docs/fastapi.md): Support Level: Supported
+- [Flask](https://docs.rollbar.com/docs/flask.md): How to setup pyrollbar with Flask | Support Level: Supported
+- [Pyramid](https://docs.rollbar.com/docs/pyramid.md): How to setup pyrollbar with Pyramid | Support Level: Supported
+- [Configuration Reference](https://docs.rollbar.com/docs/python-configuration-reference.md)
+- [React Native](https://docs.rollbar.com/docs/react-native.md): Rollbar SDK for React Native | Support Level: Supported
+- [Legacy v0.9.3 SDK](https://docs.rollbar.com/docs/legacy-v093-sdk.md)
+- [Migrating to v1.0.0](https://docs.rollbar.com/docs/migrating-to-v100.md)
+- [Ruby](https://docs.rollbar.com/docs/ruby.md): Rollbar SDK for Ruby | Support Level: Supported
+- [Plain Ruby](https://docs.rollbar.com/docs/plain-ruby.md): How to configure a basic rollbar-gem integration | Support Level: Supported
+- [Rails](https://docs.rollbar.com/docs/rails.md): How to configure rollbar-gem to work with your Rails app | Support Level: Supported
+- [Integration with rollbar.js](https://docs.rollbar.com/docs/integration-with-rollbarjs.md)
+- [Using with Zeus](https://docs.rollbar.com/docs/using-with-zeus.md): How to configure rollbar-gem to work with Zeus
+- [Using with rollbar-agent](https://docs.rollbar.com/docs/using-with-rollbar-agent.md)
+- [ActiveJob Integration](https://docs.rollbar.com/docs/activejob-integration.md): How to configure rollbar-gem to work with ActiveJob
+- [DelayedJob Integration](https://docs.rollbar.com/docs/delayedjob-integration.md): How to configure rollbar-gem to work with DelayedJob
+- [Sidekiq Integration](https://docs.rollbar.com/docs/sidekiq-integration.md): How to configure rollbar-gem to work with Sidekiq | Support Level: Supported
+- [Configuration Reference](https://docs.rollbar.com/docs/gem-configuration-reference.md): Configuration options for rollbar-gem
+- [Plugins](https://docs.rollbar.com/docs/gem-plugins.md)
+- [Community-Supported SDKs](https://docs.rollbar.com/docs/other-sdks.md)
+- [Java Community-Supported Frameworks](https://docs.rollbar.com/docs/java-community-supported-frameworks.md)
+- [Scala](https://docs.rollbar.com/docs/scala.md): How to configure rollbar-java to work with your Scala app
+- [Logback](https://docs.rollbar.com/docs/logback.md): How to configure rollbar-java to work with Logback
+- [Log4j2](https://docs.rollbar.com/docs/log4j2.md): How to configure rollbar-java to work with Log4j2
+- [Gradle](https://docs.rollbar.com/docs/gradle.md): How to install rollbar-java using Gradle
+- [Javascript Community-Supported Frameworks](https://docs.rollbar.com/docs/javascript-community-supported-frameworks.md)
+- [AWS Lambda](https://docs.rollbar.com/docs/aws-lambda.md): Using rollbar.js with AWS Lambda
+- [Browserify](https://docs.rollbar.com/docs/browserify.md)
+- [UMD](https://docs.rollbar.com/docs/umd.md)
+- [Electron](https://docs.rollbar.com/docs/electron.md): Support Level: Community
+- [Sails.js](https://docs.rollbar.com/docs/sailjs.md): Support Level: Community
+- [Segment](https://docs.rollbar.com/docs/using-rollbarjs-with-segment.md)
+- [Browser Extensions](https://docs.rollbar.com/docs/using-rollbarjs-in-a-chrome-extension.md)
+- [JQuery](https://docs.rollbar.com/docs/rollbarjs-plugins.md)
+- [Angular 1](https://docs.rollbar.com/docs/angular-1.md): Angular 1 ||  Support Level:  Community
+- [PHP Community-Supported Frameworks](https://docs.rollbar.com/docs/php-community-supported-sdks.md)
+- [Monolog](https://docs.rollbar.com/docs/monolog.md): How to use rollbar-php with Monolog
+- [Zend Framework 3](https://docs.rollbar.com/docs/zend-framework-3.md): Using Rollbar PHP SDK with Zend Framework 3 applications
+- [Symfony](https://docs.rollbar.com/docs/symfony.md): Rollbar SDK for Symfony | Support Level: Not Supported
+- [Magento 2](https://docs.rollbar.com/docs/magento-2.md): Rollbar error monitoring integration for Magento projects | Support Level: Not Supported
+- [CodeIgniter](https://docs.rollbar.com/docs/codeigniter.md): How to setup rollbar-php with CodeIgniter
+- [Python Community-Supported Frameworks](https://docs.rollbar.com/docs/python-community-supported-sdks.md)
+- [Twisted](https://docs.rollbar.com/docs/twisted.md): How to setup pyrollbar with Twisted | Support Level: Community
+- [Starlette](https://docs.rollbar.com/docs/starlette.md): Support Level: Community
+- [Bottle](https://docs.rollbar.com/docs/bottle.md): How to setup pyrollbar with Bottle | Support Level: Community
+- [AWS Lambda](https://docs.rollbar.com/docs/python-aws-lambda.md): How to setup pyrollbar with AWS Lambda
+- [Ruby Community-Supported Frameworks](https://docs.rollbar.com/docs/ruby-community-supported-frameworks.md)
+- [AWS Lambda](https://docs.rollbar.com/docs/aws-lambda-ruby.md): Simple step by step tutorial on how to use rollbar-gem with AWS Lambda
+- [Shoryuken Integration](https://docs.rollbar.com/docs/shoryuken-integration.md): How to configure rollbar-gem to work with Shoryuken
+- [sucker_punch Integration](https://docs.rollbar.com/docs/sucker_punch-integration.md): How to configure rollbar-gem to work with sucker_punch
+- [Resque Integration](https://docs.rollbar.com/docs/resque-integration.md): How to configure rollbar-gem to work with Resque
+- [Goalie](https://docs.rollbar.com/docs/goalie.md): How to configure rollbar-gem to work with Goalie
+- [Rack](https://docs.rollbar.com/docs/rack.md): How to configure rollbar-gem to work with your Rack app | Support Level: Community
+- [Sinatra](https://docs.rollbar.com/docs/sinatra.md): How to configure rollbar-gem to work with your Sinatra app | Support Level: Community
+- [Grape](https://docs.rollbar.com/docs/grape.md): How to configure rollbar-gem to work with your Grape app | Support Level: Community
+- [Salesforce Apex](https://docs.rollbar.com/docs/salesforce-apex.md): Error monitoring for your Salesforce organizations and apps | Support Level: Not Supported
+- [Sync and Async Logging Methods](https://docs.rollbar.com/docs/sync-and-async-logging-methods.md)
+- [Reporting Uncaught Errors](https://docs.rollbar.com/docs/reporting-uncaught-errors.md)
+- [Test Mocks](https://docs.rollbar.com/docs/test-mocks.md)
+- [Upgrading from < 1.10.0](https://docs.rollbar.com/docs/upgrading-from-1100.md)
+- [Flutter](https://docs.rollbar.com/docs/flutter.md): Rollbar SDK for Flutter | Support Level: Not Supported
+- [Cordova](https://docs.rollbar.com/docs/rollbar-cordova.md): Rollbar SDK for Cordova | Support Level: Not Supported
+- [Log Ingestion](https://docs.rollbar.com/docs/log-forwarding.md): Forward logs to Rollbar
+- [Mailgun](https://docs.rollbar.com/docs/mailgun.md): Sending Mailgun Events to Rollbar
+- [Proxying Requests](https://docs.rollbar.com/docs/proxying-requests.md)
+- [Setting the API Endpoint](https://docs.rollbar.com/docs/setting-the-api-endpoint.md)
+- [JSON Proxy](https://docs.rollbar.com/docs/json-proxy.md)
+- [Setting up Rollbar](https://docs.rollbar.com/docs/setup.md): Set up your Rollbar account, configure projects, learn more.
+- [Users, Teams, and Accounts](https://docs.rollbar.com/docs/users-teams-accounts.md): How to organize and control access to Rollbar
+- [Projects](https://docs.rollbar.com/docs/projects.md): Tips for organizing your services and apps into Rollbar projects
+- [Environments](https://docs.rollbar.com/docs/environments.md): How to use `environment` and `host` properties when you deploy to multiple environments
+- [Rollbar Terminology](https://docs.rollbar.com/docs/rollbar-terminology.md): Key terms & concepts used throughout Rollbar
+- [Rate Limits](https://docs.rollbar.com/docs/rate-limits.md)
+- [Enable Code Context in a Traceback](https://docs.rollbar.com/docs/code-context.md)
+- [User Settings](https://docs.rollbar.com/docs/user-settings.md): Manage your Rollbar user account settings, account/team membership, and connections to other accounts
+- [Session Replay](https://docs.rollbar.com/docs/session-replay.md)
+- [Session Replay Search](https://docs.rollbar.com/docs/session-replay-search.md)
+- [Best Practices](https://docs.rollbar.com/docs/rollbar-best-practices.md): Quickstart onboarding guide for new Rollbar customers. Learn how to enable and utilize all of Rollbar's features with this language-agnostic starter guide.
+- [SDK Configurations](https://docs.rollbar.com/docs/sdk-configurations.md): Best practices for code changes to the Rollbar library
+- [Account Configurations](https://docs.rollbar.com/docs/account-configurations.md)
+- [Project Configurations](https://docs.rollbar.com/docs/project-configurations.md)
+- [Grouping (Reducing Noise)](https://docs.rollbar.com/docs/grouping-occurrences.md)
+- [Default Grouping Algorithm](https://docs.rollbar.com/docs/grouping-algorithm.md)
+- [Manually Merging Items](https://docs.rollbar.com/docs/merge-items.md)
+- [Custom Fingerprinting Rules](https://docs.rollbar.com/docs/custom-grouping.md)
+- [Configurable file path canonicalization](https://docs.rollbar.com/docs/configurable-file-path-canonicalization.md): Here you can define regex substitution rules for file paths.
+- [Working with Rollbar Items](https://docs.rollbar.com/docs/rollbar-items.md)
+- [Item Status (The Rollbar Workflow)](https://docs.rollbar.com/docs/status-active-resolved-muted.md): Active / Resolved / Muted / Archived items
+- [Item Snooze](https://docs.rollbar.com/docs/item-snooze.md): Pause notifications for an item for a specific period of time
+- [Item Levels](https://docs.rollbar.com/docs/item-levels.md): Manage the items in your queue by severity or importance
+- [Item Owner](https://docs.rollbar.com/docs/item-owner.md)
+- [Resolve in version](https://docs.rollbar.com/docs/resolved-in-version.md)
+- [Resolve via commits](https://docs.rollbar.com/docs/resolve-via-commits.md): Use Git commit messages to automatically resolve Rollbar items
+- [Automatically Resolving Items](https://docs.rollbar.com/docs/auto-resolve-old-items.md): Resolve items based on age or deploys
+- [IP History](https://docs.rollbar.com/docs/ip-history.md)
+- [Searching for Items](https://docs.rollbar.com/docs/search-items.md)
+- [Searchable Fields](https://docs.rollbar.com/docs/searchable-fields.md): List of searchable fields within Rollbar occurrences _(* denotes new fields introduced with Search changes)_
+- [Timestamps](https://docs.rollbar.com/docs/timestamps.md)
+- [Viewing Rollbar Occurrence Data](https://docs.rollbar.com/docs/viewing-rollbar-occurrence-data.md)
+- [Item Detail Page Overview Video](https://docs.rollbar.com/docs/the-item-detail-page-video.md)
+- [Item Summarization](https://docs.rollbar.com/docs/summarization.md): An overview of item summarization fields.
+- [Saved Views](https://docs.rollbar.com/docs/saved-views.md): Quickly switch between different views of the item list page data
+- [Related Items](https://docs.rollbar.com/docs/related-items.md): Overview of the Related tab, found on the item detail page
+- [Securing your Rollbar Account](https://docs.rollbar.com/docs/security-features.md)
+- [Data Retention](https://docs.rollbar.com/docs/data-retention.md): Control how long data is retained in your Rollbar account
+- [Encryption at Rest](https://docs.rollbar.com/docs/encryption-at-rest.md)
+- [Enterprise Advanced Security Controls](https://docs.rollbar.com/docs/enterprise-security-controls.md)
+- [SAML Identity Providers](https://docs.rollbar.com/docs/saml.md): SAML Authentication is supported for accounts on Advanced and Enterprise plans.
+- [SCIM - Users and Teams Provisioning](https://docs.rollbar.com/docs/scim-provisioning.md)
+- [Two Factor Authentication](https://docs.rollbar.com/docs/two-factor-authentication.md)
+- [Rollbar IP Addresses](https://docs.rollbar.com/docs/rollbar-ip-addresses.md)
+- [Okta](https://docs.rollbar.com/docs/okta.md): SAML auth and SCIM provisioning with Okta
+- [Okta OIDC Setup](https://docs.rollbar.com/docs/oidc-setup.md): These instructions create a **custom Okta OIDC Web App** and connect it to **Rollbar OIDC SSO**.
+- [OneLogin](https://docs.rollbar.com/docs/onelogin.md): SAML auth and SCIM provisioning with OneLogin
+- [OneLogin OIDC](https://docs.rollbar.com/docs/onelogin-oidc.md): These instructions configure **OneLogin as an OIDC Identity Provider** for a Rollbar account.
+- [Tips & Tricks](https://docs.rollbar.com/docs/tips-tricks.md)
+- [Reduce Noisy Javascript Errors](https://docs.rollbar.com/docs/reduce-noisy-javascript-errors.md)
+- [Unknown(Script Error)](https://docs.rollbar.com/docs/unknown-script-error.md)
+- [Send Log Messages to Rollbar](https://docs.rollbar.com/docs/custom-log-messages.md)
+- [Hiding Third Party Code](https://docs.rollbar.com/docs/just-your-code.md)
+- [Filtering Javascript Errors by Language](https://docs.rollbar.com/docs/filter-foreign-languages.md): Ignore errors from browsers with foreign locale settings
+- [Filter or Ignore Errors from Bots](https://docs.rollbar.com/docs/filter-or-ignore-errors-from-bots.md)
+- [UUIDs](https://docs.rollbar.com/docs/uuids.md)
+- [IP Blocklist](https://docs.rollbar.com/docs/ip-blocklist.md)
+- [Adding Additional Data to the Occurrence](https://docs.rollbar.com/docs/custom-data.md)
+- [Decision Support with Versions API](https://docs.rollbar.com/docs/decision-support-with-versions-api.md)
+- [Disabling Feature Flags](https://docs.rollbar.com/docs/disabling-feature-flag.md)
+- [Managing Rollbar across an Organization](https://docs.rollbar.com/docs/managing-rollbar-across-an-organization.md)
+- [Latest SDK Versions](https://docs.rollbar.com/docs/latest-sdk-versions.md)
+- [Rollbar configuration in the build/deployment process](https://docs.rollbar.com/docs/rollbar-configurations-in-build-and-deployment-process.md)
+- [Metrics API Code Examples](https://docs.rollbar.com/docs/metrics-api-examples.md)
+- [Metrics API Occurrence Query Examples](https://docs.rollbar.com/docs/metrics-api-query-examples.md)
+- [Deleting items & occurrences](https://docs.rollbar.com/docs/deleting-items-occurrences.md)
+- [Download items & occurrences](https://docs.rollbar.com/docs/download-items-occurrences.md)
+- [Avoiding billing surprises](https://docs.rollbar.com/docs/avoiding-billing-surprises.md): Rollbar provides tools to manage billing and avoid surprises by setting up usage alerts, configuring overage options, and establishing rate limits, allowing users to receive notifications via email or Slack and control how occurrences are processed when limits are reached. Here are a few suggested steps you can take to ensure you don't get any surprises.
+- [Custom Fields for Jira Issue Tracking](https://docs.rollbar.com/docs/custom-fields-for-jira-issue-tracking.md)
+- [Sending Rollbar Webhooks (Nearly) Anywhere](https://docs.rollbar.com/docs/sending-rollbar-webhooks-nearly-anywhere.md)
+- [Enable GitHub Organization Access for Rollbar](https://docs.rollbar.com/docs/enable-github-organization-access-for-rollbar.md)
+- [Error Grouping Best Practices](https://docs.rollbar.com/docs/error-grouping-best-practices.md)
+- [How Rollbar helps ensure Low-Risk Releases](https://docs.rollbar.com/docs/how-rollbar-helps-ensure-low-risk-releases.md)
+- [Rollbar as a tool for DevOps Teams](https://docs.rollbar.com/docs/rollbar-as-a-tool-for-devops-teams.md)
+- [Manage Rollbar automatically through the Rollbar Terraform Provider](https://docs.rollbar.com/docs/manage-rollbar-automatically-through-the-rollbar-terraform-provider.md)
+- [Finding items by UUID](https://docs.rollbar.com/docs/finding-items-by-uuid.md)
+- [Using Zapier to create Zendesk tickets](https://docs.rollbar.com/docs/using-zapier-to-create-zendesk-tickets.md)
+- [Rollbar Solutions: Enabling Support Teams](https://docs.rollbar.com/docs/rollbar-solutions-enabling-support-teams.md)
+- [Intelligent alerting helps you stay on top of critical errors and reduce noise in your notification channels](https://docs.rollbar.com/docs/intelligent-alerting-helps-you-stay-on-top-of-critical-errors-and-reduce-noise-in-your-notification-channels.md)
+- [Introducing Automation-Grade Grouping](https://docs.rollbar.com/docs/introducing-automation-grade-grouping.md)
+- [Reduce noise with the help of Slack notifications integration](https://docs.rollbar.com/docs/reduce-noise-with-the-help-of-slack-notifications-integration.md)
+- [Jira integration best practices](https://docs.rollbar.com/docs/jira-integration-best-practices.md)
+- [Improve your Error Grouping with the help of Rollbar](https://docs.rollbar.com/docs/improve-your-error-grouping-with-the-help-of-rollbar.md)
+- [Source Map Troubleshooting](https://docs.rollbar.com/docs/source-map-troubleshooting.md)
+- [Preventing Client-Side Access Token Abuse](https://docs.rollbar.com/docs/preventing-client-side-access-token-abuse.md)
+- [Disable Two Factor Authentication](https://docs.rollbar.com/docs/disable-two-factor-authentication.md)
+- [Hiding Third-Party Code](https://docs.rollbar.com/docs/hiding-third-party-code.md)
+- [Filtering Javascript errors by language](https://docs.rollbar.com/docs/filtering-javascript-errors-by-language.md)
+- [Billing in Rollbar](https://docs.rollbar.com/docs/billing-in-rollbar.md)
+- [Personal vs. Organization Accounts](https://docs.rollbar.com/docs/personal-vs-organization-accounts.md)
+- [Manual merging vs. Custom fingerprints](https://docs.rollbar.com/docs/manual-merging-vs-custom-fingerprints.md)
+- [Streamline your items workflow](https://docs.rollbar.com/docs/streamline-your-items-workflow.md)
+- [Could not compare commits between SHAs](https://docs.rollbar.com/docs/could-not-compare-commits-between-shas.md)
+- [Get more insights and control over your errors](https://docs.rollbar.com/docs/get-more-insights-and-control-over-your-errors.md)
+- ["There was a problem trying to connect to your Asana account." message appears](https://docs.rollbar.com/docs/there-was-a-problem-trying-to-connect-to-your-asana-account-message-appears.md)
+- [Sending Rollbar Notifications to Discord](https://docs.rollbar.com/docs/sending-discord-notifications-using-webhooks-and-hookdeck.md): Using Hookdeck, you can transform a Rollbar Webhook to one that Discord can display
+- [Billing FAQs](https://docs.rollbar.com/docs/billing-faqs.md)
+- [Slack Notification Practical Examples](https://docs.rollbar.com/docs/slack-notification-practical-examples.md): Rollbar's Slack notification integration has quite a few powerful features, and some may not be immediately obvious - here's a list of some simple to advanced setups to give you some ideas!
+- [MCP Server Setup](https://docs.rollbar.com/docs/mcp-server-setup.md): An MCP server is a component of the Model Context Protocol (MCP), which is an open standard for connecting AI systems with external data sources and tools.
+- [Dashboard](https://docs.rollbar.com/docs/dashboard.md)
+- [Issue Tracking Integration](https://docs.rollbar.com/docs/issue-tracking.md): Create issues in JIRA, Trello, Github, and more
+- [Asana](https://docs.rollbar.com/docs/asana.md)
+- [Azure DevOps](https://docs.rollbar.com/docs/azure-devops-workitems.md)
+- [Shortcut](https://docs.rollbar.com/docs/shortcut.md): Create stories in Shortcut for Rollbar items
+- [Jira](https://docs.rollbar.com/docs/jira.md): Create issues in Jira for Rollbar items
+- [Trello](https://docs.rollbar.com/docs/trello.md)
+- [Notifications / Alerting](https://docs.rollbar.com/docs/notifications.md): Rollbar provides real-time alerts through the project-level Notifications menu.
+- [AlertOps](https://docs.rollbar.com/docs/alertops.md)
+- [Datadog](https://docs.rollbar.com/docs/datadog.md): Create Datadog events from Rollbar
+- [OpsGenie](https://docs.rollbar.com/docs/opsgenie-1.md): Connecting Rollbar to OpsGenie
+- [PagerDuty](https://docs.rollbar.com/docs/pagerduty.md): Connecting Rollbar to PagerDuty
+- [Slack](https://docs.rollbar.com/docs/slack.md)
+- [Webhooks](https://docs.rollbar.com/docs/webhooks.md)
+- [Zenduty](https://docs.rollbar.com/docs/zenduty.md): Connecting Rollbar to Zenduty
+- [Adaptive Alerts](https://docs.rollbar.com/docs/adaptive-alerts.md)
+- [Path Filter](https://docs.rollbar.com/docs/path-filter.md)
+- [Email Notifications](https://docs.rollbar.com/docs/email-notifications.md)
+- [Root Cause Analysis](https://docs.rollbar.com/docs/root-cause-analysis.md): AI-assisted ability to Root Cause an error in Rollbar.
+- [Access Tokens](https://docs.rollbar.com/docs/access-tokens.md): Managing Account & Project Access Tokens
+- [People Tracking](https://docs.rollbar.com/docs/person-tracking.md)
+- [Version Tracking](https://docs.rollbar.com/docs/versions.md): Version tracking
+- [Deploy Tracking](https://docs.rollbar.com/docs/deploy-tracking.md)
+- [Bash](https://docs.rollbar.com/docs/bash.md): Report a deploy to Rollbar from the Bash shell
+- [Capistrano](https://docs.rollbar.com/docs/capistrano.md): Report deploys to Rollbar from Capistrano
+- [CircleCI](https://docs.rollbar.com/docs/circleci.md): Report deploys to Rollbar from CircleCI
+- [Engine Yard](https://docs.rollbar.com/docs/engineyard.md): Report deploys to Rollbar from an Engine Yard app
+- [Fabric](https://docs.rollbar.com/docs/fabric.md): Report deploys to Rollbar from Fabric
+- [Heroku](https://docs.rollbar.com/docs/heroku.md): Deploy Tracking with Heroku and Rollbar
+- [Jenkins](https://docs.rollbar.com/docs/jenkins.md): Report deploys to Rollbar from Jenkins
+- [PowerShell](https://docs.rollbar.com/docs/powershell.md)
+- [Source Control Integration](https://docs.rollbar.com/docs/source-control.md): Connect to Github, Gitlab, and Bitbucket
+- [Bitbucket](https://docs.rollbar.com/docs/bitbucket.md)
+- [GitHub](https://docs.rollbar.com/docs/github.md)
+- [GitLab](https://docs.rollbar.com/docs/gitlab.md)
+- [Service Links](https://docs.rollbar.com/docs/service-links.md)
+- [Source Maps](https://docs.rollbar.com/docs/source-maps.md)
+- [Source Map Errors](https://docs.rollbar.com/docs/source-map-errors.md)
+- [Telemetry](https://docs.rollbar.com/docs/telemetry.md)
+- [Analyze](https://docs.rollbar.com/docs/rollbar-analyze.md): Rollbar Analyze is designed to deliver even more powerful insights to help your teams better understand your code and make data-driven decisions.
+- [RQL](https://docs.rollbar.com/docs/rql.md)
+- [Improve](https://docs.rollbar.com/docs/rollbar-improve.md): Rollbar Improve is designed to provide information through easily digestible metrics and historical trends to allow teams to understand their code and take action to improve their practices.
+- [Usage](https://docs.rollbar.com/docs/usage.md): View your account usages
+- [More Integrations](https://docs.rollbar.com/docs/other-integrations.md)
+- [DevCycle](https://docs.rollbar.com/docs/devcycle.md): Rollbar integration with DevCycle for faster, better bug diagnostics
+- [GrowthBook](https://docs.rollbar.com/docs/growthbook.md): Rollbar integration with GrowthBook for faster, better bug diagnostics
+- [Bird Eats Bug](https://docs.rollbar.com/docs/bird-eats-bug.md): Connect errors in Rollbar to Bird Eats Bug recordings
+- [DataGrail](https://docs.rollbar.com/docs/datagrail.md): Rollbar API Integration: API Integration and PII Extraction specifics
+- [FullStory](https://docs.rollbar.com/docs/fullstory.md): Rollbar and FullStory combine for faster, better bug diagnostics.
+- [LogRocket](https://docs.rollbar.com/docs/logrocket.md): Rollbar and LogRocket combine for faster, better bug diagnostics.
+- [Help Scout](https://docs.rollbar.com/docs/helpscout.md): Using Rollbar inside Help Scout
+- [PlayerZero.app](https://docs.rollbar.com/docs/playerzero.md): PlayerZero packages user sessions into shareable, interactive reports so you have all the context from the start.
+- [PostHog](https://docs.rollbar.com/docs/posthog.md): The Rollbar PostHog integration requires either PostHog Cloud, or a self-hosted PostHog instance.
+- [Selenium](https://docs.rollbar.com/docs/selenium-integration.md)
+- [Splunk Observability](https://docs.rollbar.com/docs/splunk-observability.md): The Rollbar Splunk Observability (SignalFX) integration requires a Splunk Cloud account and Rollbar account.
+- [LaunchDarkly](https://docs.rollbar.com/docs/launchdarkly.md): Rollbar and LaunchDarkly combine for faster, better bug diagnostics.
+- [Vercel](https://docs.rollbar.com/docs/vercel.md)
+- [Billing](https://docs.rollbar.com/docs/billing.md)
+- [Credit Billing](https://docs.rollbar.com/docs/credit-billing.md)
+- [Privacy Policy](https://docs.rollbar.com/docs/privacy-policy.md)
+- [Terms of Service](https://docs.rollbar.com/docs/terms-of-service.md)
+- [Responsible Disclosure Policy](https://docs.rollbar.com/docs/responsible-disclosure-policy.md)
+- [Security & Compliance Policy](https://docs.rollbar.com/docs/security.md)
+- [Rollbar & CCPA](https://docs.rollbar.com/docs/ccpa-rollbar.md)
+- [Rollbar & GDPR](https://docs.rollbar.com/docs/gdpr-rollbar.md)
+- [Data Processing Addendum](https://docs.rollbar.com/docs/data-processing-agreement.md)
+- [Data Subprocessors](https://docs.rollbar.com/docs/data-subprocessors.md)
+- [Data Transfer Impact Assessment](https://docs.rollbar.com/docs/data-transfer-impact-assessment.md): Last updated on: March 15th, 2023
+- [DMCA Notice](https://docs.rollbar.com/docs/dmca.md)
+- [Updates - Terms of Service](https://docs.rollbar.com/docs/terms-of-service-archive.md)
+- [Terms of Service](https://docs.rollbar.com/docs/terms-of-service-20191227.md)
+- [Terms of Service](https://docs.rollbar.com/docs/terms-of-service-20170306.md)
+- [Terms of Service](https://docs.rollbar.com/docs/terms-of-service-20160426.md)
+- [Terms of Service](https://docs.rollbar.com/docs/terms-of-service-20141215.md)
+- [Terms of Service](https://docs.rollbar.com/docs/terms-of-service-20141214.md)
+- [Terms of Service](https://docs.rollbar.com/docs/terms-of-service-20130225.md)
+- [AI Privacy Principles](https://docs.rollbar.com/docs/ai-privacy-principles.md)
+
+## API Reference
+- [Rollbar API](https://docs.rollbar.com/reference/getting-started-1.md)
+- [Create item](https://docs.rollbar.com/reference/create-item.md): Rollbar receives Occurrences (exceptions and messages) via a RESTful JSON API. Clients send JSON data via an HTTP POST to https://api.rollbar.com/api/1/item/  We strongly recommend using HTTPS, but HTTP is also supported. For HTTP, use http://api.rollbar.com/api/1/item/  POSTed JSON data is accepted either as the body of the request, or form-encoded as the value of the payload parameter (which should be the only parameter).  All responses (including error responses) are returned as JSON.  ### Data Format The example JSON payload below describes all the required and optional params that Rollbar understands. The meaning of each key is explained in the comments.  ```json {   // Required: data   "data": {      // Required: environment     // The name of the environment in which this occurrence was seen.     // A string up to 255 characters. For best results, use "production" or "prod" for your     // production environment.     // You don't need to configure anything in the Rollbar UI for new environment names;     // we'll detect them automatically.     "environment": "production",      // Required: body     // The main data being sent. It can either be a message, an exception, or a crash report.     "body": {        // Required: "trace", "trace_chain", "message", or "crash_report" (exactly one)       // If this payload is a single exception, use "trace"       // If a chain of exceptions (for languages that support inner exceptions), use "trace_chain"       // If a message with no stack trace, use "message"       // If an iOS crash report, use "crash_report"        // Optional: "telemetry". Only applicable if you are sending telemetry data.       "telemetry": [         {         // Required: level         // The severity level of the telemetry data. One of: "critical", "error", "warning", "info", "debug".         "level": "info",          // Required: type         // The type of telemetry data. One of: "log", "network", "dom", "navigation", "error", "manual".         "type": "network",          // Required: source         // The source of the telemetry data. Usually "client" or "server".         "source": "client",          // Required: timestamp_ms         // When this occurred, as a unix timestamp in milliseconds.         "timestamp_ms": 1720413393557,          // Required: body         // The key-value pairs for the telemetry data point. See "body" key below.         // If type above is "log", body should contain "message" key.         // If type above is "network", body should contain "method", "url", and "status_code" keys.         // If type above is "dom", body should contain "element" key.         // If type above is "navigation", body should contain "from" and "to" keys.         // If type above is "error", body should contain "message" key.         "body": {           "subtype": "xhr",           "method": "GET",           "url": "/api/1/item/4/",           "status_code": "200",           "start_timestamp_ms": 1720413394557,           "end_timestamp_ms": 1720413394957         },       },         // more telemetry array elements follow...       ],        // Option 1: "trace"       "trace": {          // Required: frames         // A list of stack frames, ordered such that the most recent call is last in the list.         "frames": [           // Each frame is an object.           {             // Required: filename             // The filename including its full path.             "filename": "/Users/brian/www/mox/mox/views/project.py",              // Optional: lineno             // The line number as an integer             "lineno": 26,              // Optional: colno             // The column number as an integer             "colno": 8,              // Optional: method             // The method or function name             "method": "index",              // Optional: code             // The line of code             "code": "_save_last_project(request, project_id, force=True)",              // Optional: class_name             // A string containing the class name.             // Used in the UI when the payload's top-level "language" key has the value "java"             "class_name": "java.lang.String",              // Optional: context             // Additional code before and after the "code" line             "context": {               // Optional: pre               // List of lines of code before the "code" line               "pre": [                 "project = request.context",                 "project_id = project.id"               ],                // Optional: post               // List of lines of code after the "code" line               "post": []             },              // (Deprecated) Optional: args             // List of values of positional arguments to the method/function call             // NOTE: as this can contain sensitive data, you may want to scrub the values             "args": ["<Request object>", 25],              // (Deprecated) Optional: kwargs             // Object of keyword arguments (name => value) to the method/function call             // NOTE: as this can contain sensitive data, you may want to scrub the values             "kwargs": {               "force": true             },              // Optional: argspec             // List of the names of the arguments to the method/function call.             "argspec": ["request", "user"],              // Optional: varargspec             // If the function call takes an arbitrary number of unnamed positional arguments,             // the name of the argument that is the list containing those arguments.             // For example, in Python, this would typically be "args" when "*args" is used.             // The actual list will be found in locals.             "varargspec": "args",              // Optional: keywordspec             // If the function call takes an arbitrary number of keyword arguments, the name             // of the argument that is the object containing those arguments.             // For example, in Python, this would typically be "kwargs" when "**kwargs" is used.             // The actual object will be found in locals.             "keywordspec": "kwargs",              // Optional: locals             // Object of local variables for the method/function call.             // The values of variables from argspec, vararspec and keywordspec             // can be found in locals.             "locals": {                 "request": "<Request object>",                 "user": "<User object>",                 "args": [true, "Python"],                 "kwargs": {"level": "warning"}             }           },           {             "filename": "/Users/brian/www/mox/mox/views/project.py",             "lineno": 497,             "method": "_save_last_project",             "code": "user = foo"           }         ],          // Required: exception         // An object describing the exception instance.         "exception": {           // Required: class           // The exception class name.           "class": "NameError",            // Optional: message           // The exception message, as a string           "message": "global name 'foo' is not defined",            // Optional: description           // An alternate human-readable string describing the exception           // Usually the original exception message will have been machine-generated;           // you can use this to send something custom           "description": "Something went wrong while trying to save the user object"         }        },        // Option 2: "trace_chain"       // Used for exceptions with inner exceptions or causes       "trace_chain": [         // Each element in the list should be a "trace" object, as shown above         // Must contain at least one element.       ],        // Option 3: "message"       // Only one of "trace", "trace_chain", "message", or "crash_report" should be present.       // Presence of a "message" key means that this payload is a log message.       "message": {          // Required: body         // The primary message text, as a string         "body": "Request over threshold of 10 seconds",          // Can also contain any arbitrary keys of metadata. Their values can be any valid JSON.         // For example:          "route": "home#index",         "time_elapsed": 15.23        },        // Option 4: "crash_report"       // Only one of "trace", "trace_chain", "message", or "crash_report" should be present.       "crash_report": {         // Required: raw         // The raw crash report, as a string         // Rollbar expects the format generated by rollbar-ios         "raw": "<crash report here>"       }      },      // Optional: level     // The severity level. One of: "critical", "error", "warning", "info", "debug"     // Defaults to "error" for exceptions and "info" for messages.     // The level of the *first* occurrence of an item is used as the item's level.     "level": "error",      // Optional: timestamp     // When this occurred, as a unix timestamp.     "timestamp": 1723188822,      // Optional: code_version     // A string, up to 40 characters, describing the version of the application code     // Rollbar understands these formats:     // - semantic version (i.e. "2.1.12")     // - integer (i.e. "45")     // - git SHA (i.e. "3da541559918a808c2402bba5012f6c60b27661c")     // If you have multiple code versions that are relevant, those can be sent inside "client" and "server"     // (see those sections below)     // For most cases, just send it here.     "code_version": "3da541559918a808c2402bba5012f6c60b27661c",      // Optional: platform     // The platform on which this occurred. Meaningful platform names:     // "browser", "android", "ios", "flash", "client", "heroku", "google-app-engine"     // If this is a client-side event, be sure to specify the platform and use a post_client_item access token.     "platform": "linux",      // Optional: language     // The name of the language your code is written in.     // This can affect the order of the frames in the stack trace. The following languages set the most     // recent call first - 'ruby', 'javascript', 'php', 'java', 'objective-c', 'lua'     // It will also change the way the individual frames are displayed, with what is most consistent with     // users of the language.     "language": "python",      // Optional: framework     // The name of the framework your code uses     "framework": "pyramid",      // Optional: context     // An identifier for which part of your application this event came from.     // Items can be searched by context (prefix search)     // For example, in a Rails app, this could be `controller#action`.     // In a single-page javascript app, it could be the name of the current screen or route.     "context": "project#index",      // Optional: request     // Data about the request this event occurred in.     "request": {       // Can contain any arbitrary keys. Rollbar understands the following:        // url: full URL where this event occurred       "url": "https://rollbar.com/project/1",        // method: the request method       "method": "GET",        // headers: object containing the request headers.       "headers": {         // Header names should be formatted like they are in HTTP.         "Accept": "text/html",         "Referer": "https://rollbar.com/"       },        // params: any routing parameters (i.e. for use with Rails Routes)       "params": {         "controller": "project",         "action": "index"       },        // GET: query string params       "GET": {},        // query_string: the raw query string       "query_string": "",        // POST: POST params       "POST": {},        // body: the raw POST body       "body": "",        // user_ip: the user's IP address as a string.       // Can also be the special value "$remote_ip", which will be replaced with the source IP of the API request.       // Will be indexed, as long as it is a valid IPv4 address.       "user_ip": "100.51.43.14"      },      // Optional: person     // The user affected by this event. Will be indexed by ID, username, and email.     // People are stored in Rollbar keyed by ID. If you send a multiple different usernames/emails for the     // same ID, the last received values will overwrite earlier ones.     "person": {       // Required: id       // A string up to 40 characters identifying this user in your system.       "id": "12345",        // Optional: username       // A string up to 255 characters       "username": "brianr",        // Optional: email       // A string up to 255 characters       "email": "brian@rollbar.com"     },      // Optional: server     // Data about the server related to this event.     "server": {       // Can contain any arbitrary keys. Rollbar understands the following:        // Optional: cpu       // A string up to 255 characters       "cpu": "x64",        // Optional: host       // host: The server hostname. Will be indexed.       "host": "web4",        // Optional: root       // root: Path to the application code root, not including the final slash.       // Used to collapse non-project code when displaying tracebacks.       "root": "/Users/brian/www/mox",        // Optional: Branch       // branch: Name of the checked-out source control branch. Defaults to "master"       "branch": "master",        // Optional: code_version       // String describing the running code version on the server       // See note about "code_version" above       "code_version": "b6437f45b7bbbb15f5eddc2eace4c71a8625da8c",        // (Deprecated) sha: Git SHA of the running code revision. Use the full sha.       "sha": "b6437f45b7bbbb15f5eddc2eace4c71a8625da8c"     },      // Optional: client     // Data about the client device this event occurred on.     // As there can be multiple client environments for a given event (i.e. Flash running inside     // an HTML page), data should be namespaced by platform.     "client": {       // Can contain any arbitrary keys. Rollbar understands the following:        // Optional: cpu       // A string up to 255 characters       "cpu": "x64",        "javascript": {          // Optional: browser         // The user agent string         "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3)",          // Optional: code_version         // String describing the running code version in javascript         // See note about "code_version" above         "code_version": "b6437f45b7bbbb15f5eddc2eace4c71a8625da8c",          // Optional: source_map_enabled         // Set to true to enable source map deobfuscation         // See the "Source Maps" guide for more details.         "source_map_enabled": false,          // Optional: guess_uncaught_frames         // Set to true to enable frame guessing         // See the "Source Maps" guide for more details.         "guess_uncaught_frames": false        }     },      // Optional: custom     // Any arbitrary metadata you want to send. "custom" itself should be an object.     "custom": {},      // Optional: fingerprint     // A string controlling how this occurrence should be grouped. Occurrences with the same     // fingerprint are grouped together. See the "Grouping" guide for more information.     // Should be a string up to 40 characters long; if longer than 40 characters, we'll use its SHA1 hash.     // If omitted, we'll determine this on the backend.     "fingerprint": "50a5ef9dbcf9d0e0af2d4e25338da0d430f20e52",      // Optional: title     // A string that will be used as the title of the Item occurrences will be grouped into.     // Max length 255 characters.     // If omitted, Rollbar will determine this on the backend.     "title": "NameError when setting last project in views/project.py",      // Optional: uuid     // A string, up to 36 characters, that uniquely identifies this occurrence.     // While it can now be any latin1 string, this may change to be a 16 byte field in the future.     // We recommend using a UUID4 (16 random bytes).     // The UUID space is unique to each project, and can be used to look up an occurrence later.     // It is also used to detect duplicate requests. If you send the same UUID in two payloads, the second     // one will be discarded.     // While optional, it is recommended that all clients generate and provide this field     "uuid": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6",      // Optional: notifier     // Describes the library used to send this event.     "notifier": {       // Optional: name       // Name of the library       "name": "pyrollbar",        // Optional: version       // Library version string       "version": "1.0.0"     }    } } ``` Note that you can send us whatever data you want and we'll store it. Max payload size is 1024kb (kilobytes). For best results, put custom data in `request`, `server`, `client`, `person`, or `custom`.  ### Response Format  #### Success  On success, this endpoint will respond with HTTP status code 200, and a JSON response like the following:  ```javascript {   // Always present: err   // 0 indiciates that there was no error   err: 0,    // Always present: result   result: {     // Always present: uuid     // UUID of the posted occurrence.     // If you provided one in the payload, this will be the value you provided     // If you did not, one will be generated for you.     // You can use this later to look up the occurrence by UUID.     uuid: "d4c7acef55bf4c9ea95e4fe9428a8287",      // Deprecated: id     // Unused; will be removed in the future     id: null   } } ```  On error, this endpoint will respond with an HTTP error code 400 or higher, and a JSON response like the following:  ```javascript {   // Always present: err   // 1 indicates there was an error   err: 1,    // Always present: message   // A human-readable message describing the error   message: "request entity too large" } ```
+- [Get an item (by UUID)](https://docs.rollbar.com/reference/get-an-item-by-occurrence-uuid.md): The `UUID` must be an ocurrence UUID for an occurrence in the item. Occurrence UUIDs are part of the response in https://docs.rollbar.com/reference/create-item.
+- [List all items](https://docs.rollbar.com/reference/list-all-items.md): # Examples Get the 101st through 199th active items: ```curl curl -H "X-Rollbar-Access-Token: YOUR_ACCESS_TOKEN" 'https://api.rollbar.com/api/1/items/?status=active&page=2' ``` Get the first page of items that are error or critical, in the production environment: ```curl curl -H "X-Rollbar-Access-Token: YOUR_ACCESS_TOKEN" 'https://api.rollbar.com/api/1/items/?level=error&level=critical&environment=production' ```  Note that the `total_count` in the `result` will return `null` if your project has more than 100,000 unique items.
+- [Get an item (by ID)](https://docs.rollbar.com/reference/get-an-item-by-id.md): `itemid` must be an item ID for an item in the project. These IDs are returned as the id field in other API calls.  Note that they are NOT found in in URLs like `https://rollbar.com/myaccount/myproject/items/456/` – that is the "counter", which can be used in the following API call.
+- [Update an item](https://docs.rollbar.com/reference/update-an-item.md): Used to modify an item's state. Currently supports: * setting the status, level, title, assigned user * when resolving, setting the "resolved in version" * snoozing / unsnoozing an item (only available for paid accounts) * setting the item owner to a team (only available for Advanced and Enterprise accounts)  Example - ```curl curl -X PATCH 'https://api.rollbar.com/api/1/item/275123456' \   --header "Content-Type: application/json" \   --data '{"status": "resolved", "resolved_in_version": "aabbcc1"}'   ```
+- [Get an item (by project counter)](https://docs.rollbar.com/reference/get-an-item-by-project-counter.md): `counter` must be an item counter for an item in the project. The counter can be found in URLs like `https://rollbar.com/myaccount/myproject/items/456/` (456 is the counter).  The success response is a 301 redirect like this:  ``` HTTP/1.1 301 Moved Permanently Location: /api/1/item/272505123  {   "err": 0,   "result": {     "itemId": 272505123,     "path": "/api/1/item/272505123",     "uri": "/api/1/item/272505123"   } } ```
+- [List all occurrences in a project](https://docs.rollbar.com/reference/get_api-1-instances.md): Returns all occurrences in the project, in pages of 20. Order is descending by occurrence ID (which is approximately descending by timestamp).
+- [List all occurrences in an item](https://docs.rollbar.com/reference/get_api-1-item-item-id-instances.md): Returns all occurrences of an item, in pages of 20. Order is descending by occurrence ID (which is approximately descending by timestamp).
+- [Get an occurrence](https://docs.rollbar.com/reference/get_api-1-instance-instance-id.md): Returns a JSON object describing the occurrence. This is similar to the "Raw JSON" section of the occurrence detail page.  `instance_id` must be an Occurrence ID for an occurrence in the project. These IDs are returned as the `id` field in other occurrence API calls, and can be found in the Rollbar UI on URLs like `https://rollbar.com/Rollbar/demo/items/54/occurrences/3209095494/` (`3209095494` is the Occurrence ID).
+- [Delete an occurrence](https://docs.rollbar.com/reference/delete_api-1-instance-instance-id.md): Permanently deletes an occurrence. This will make it unavailable in the Rollbar UI and API. Aggregate counts are not updated. Deleting occurrences will not reduce or reset your quota.  Deletion takes place asynchronously, typically within a few seconds. To verify that deletion has completed, use GET and expect a 404 response.
+- [Get metrics for a list of items](https://docs.rollbar.com/reference/post_api-1-metrics-items.md): Get metrics for a provided list of item IDs. The endpoint follows search/query semantics as a POST request using project read access token
+- [Occurrences over a span of time](https://docs.rollbar.com/reference/post_api-1-metrics-occurrences.md): Get occurrences metrics over a span of time by filtering, grouping, and aggregating. The endpoint follows search/query semantics as a POST request using project read access token.  List of **columns/fields** that can be used with some components of your query: * `project_id` * `item_id` * `environment` * `browser_family` * `browser_version` * `os_family` * `os_version` * `device_brand` * `device_model` * `ip_address` * `item_status` * `item_level` * `item_group_item_id` * `item_title` * `item_counter` * `person_username` * `person_email` * `person_id` * `code_version` * `count` * `occurrence_id` * `uuid` * `context` * `platform` * `framework` * `platform_canonical` * `framework_canonical` * `language` * `language_name` * `notifier_name` * `notifier_version` * `occurrence_count` * `message_body` * `timestamp` * `fingerprint` * `server_host` * `server_root` * `server_pid` * `server_cpu` * `scm_branch` * `request_url` * `request_method` * `request_query_string` * `request_body`
+- [Get resolution time metrics for a list of projects](https://docs.rollbar.com/reference/post_api-1-metrics-ttr.md): Get resolution time metrics for a provided list of project IDs. It can be filtered by environments, levels and frameworks.
+- [Report a deploy](https://docs.rollbar.com/reference/post-deploy.md): For tool-specific instructions on reporting a deploy, see our [Deploy Tracking](doc:deploy-tracking) docs.  For instructions on setting the default deploy timeout period, see [Deploy Timeouts](https://docs.rollbar.com/docs/deploy-tracking#section-deploy-timeout).
+- [Get a deploy](https://docs.rollbar.com/reference/get-a-deploy.md): `deploy_id` must be an ID for a deploy in the project. These IDs are returned as the id field in other API calls, and can be found in the Rollbar UI on URLs like `https://rollbar.com/deploy/12345/` (`12345` is the Deploy ID).
+- [Update a deploy](https://docs.rollbar.com/reference/update-a-deploy.md): ```JavaScript $.get('http://yoursite.com/test/' + id, function(data) {     console.log(data); });```
+- [List all deploys](https://docs.rollbar.com/reference/list-all-deploys.md): Returns all deploys in the project, most recent first, in pages of 20.
+- [List all environments](https://docs.rollbar.com/reference/list-all-environments.md): Returns all environments in the project, in pages of 20.  A successful response looks like: ``` {   'err': 0   'result': {     'page': 1,     'environments': [       // where each environment has the shape:       {         'id': 1,         'project_id': 123,         'environment': 'production',         // visibility of the environment in the app (can either be 1 or 0)         'visible': 1       },       ...     ]   } } ```
+- [Upload a JS source map](https://docs.rollbar.com/reference/upload-a-js-source-map.md): In the above example, our website is http://example.com, we have a minified JavaScript file at http://example.com/js/example.min.js, and we have a source tree like this: ``` example/ example/static/js/example.min.js example/static/js/example.min.map example/static/js/site.js example/static/js/util.js ```
+- [Upload an iOS dSYM bundle](https://docs.rollbar.com/reference/upload-a-dsym-file.md): **Note:** dSYM bundles are a special type of Apple directory which are made to _look_ like a file, because of this, all dSYM bundles must be zipped prior to upload.
+- [Upload an Android Proguard file](https://docs.rollbar.com/reference/upload-a-proguard-file.md)
+- [Upload a Flutter symbols file](https://docs.rollbar.com/reference/upload-a-flutter-symbols-file.md)
+- [Check an RQL job](https://docs.rollbar.com/reference/check-an-rql-job.md): # Response The response will be a RQL Job resource, example: ```json {   "err" 0,   "result": {     "id": 123,  // job id     "project_id": 456,     "query_string": "show tables",     "status": "new", // One of "new", "running", "success", "failed", "cancelled", or "timed_out"     "job_hash": "abcdefabcdefabcdef",     "date_created": 1446598885,     "date_modified": 1446598885,     "result": {...} // A RQL job resource if expand=result is used in query string   } }``
+- [Create an RQL job](https://docs.rollbar.com/reference/create-an-rql-job.md): # Response The response will be a RQL Job resource, example: ```json {   "err" 0,   "result": {     "id": 123,  // job id     "project_id": 456,     "query_string": "show tables",     "status": "new", // One of "new", "running", "success", "failed", "cancelled", or "timed_out"     "job_hash": "abcdefabcdefabcdef",     "date_created": 1446598885,     "date_modified": 1446598885   } }```
+- [List all RQL jobs](https://docs.rollbar.com/reference/list-all-rql-jobs.md): If you use a project access token, all rql jobs for that project will be returned. If you use an account access token, all rql jobs for the account will be returned. # Response ```json {   "err" 0,   "result": [     { ... }, // RQL job resource       ...   ] } ```
+- [Get RQL job results](https://docs.rollbar.com/reference/get-rql-job-results.md): # Response The response will be a RQL job result resource, example: ```json {   "err" 0,   "result": {     "job_id": 123,  // job id     "result": {       "rows": [{...}],       "selectionColumns": [...],       "columns": [...],       "errors": [],       "warnings": [],       "rowcount": 1,       "executionTime": 123     },     "job": {...} // A RQL job resource if expand=job is set in the query string   } }```
+- [Cancel an RQL job](https://docs.rollbar.com/reference/cancel-an-rql-job.md): # Response The response will be a RQL Job resource, example: ```json {   "err" 0,   "result": {     "id": 123,  // job id     "project_id": 456,     "query_string": "show tables",     "status": "cancelled", // One of "new", "running", "success", "failed", "cancelled", or "timed_out"     "job_hash": "abcdefabcdefabcdef",     "date_created": 1446598885,     "date_modified": 1446598885   } }```
+- [Get top active items](https://docs.rollbar.com/reference/get-top-active-items.md): # Response ```json {   "err": 0,   "result": [     // each element in the list is an object with an "item" object and a "counts" list     {         // data describing the item (similar to that returned by GET /api/1/item/:id)         "item": {             "id": 2071,             "counter": 1007,             "environment": "production",             "framework": 0,             "last_occurrence_timestamp": 1728410581,             "level": 40,             "occurrences": 54,             "project_id": 12345,             "title": "Something went wrong",             "unique_occurrences": 5         },         // list of occurrence counts in the past 24 hours. Oldest first.         "counts": [12, 10, 7, 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 8, 5, 6]     },     { /* more elements ... */ }   ] } ``` By default, the sort of the top items is by the level of severity, then the number of occurrences. E.g. an item with a `warning` level and 300 occurrences will be below an item with an `error` level and 150 occurrences. This behavior can be changed by passing `sort=occurrences` in the query parameters, which will sort only by the number of occurrences in the time period.  Note that the level and framework are returned as integers here. `10`, `20`, `30`, `40`, and `50` representing the `debug`, `info`, `warning`, `error`, and `critical` levels, respectively. For the full integer-framework mapping, please see the [Framework IDs](https://docs.rollbar.com/docs/rql#framework-ids) section in our docs.
+- [Get active occurrence counts](https://docs.rollbar.com/reference/get-occurrence-counts.md): Analogous to "Hourly Error/Critical Occurrences" and "Daily Error/Critical Occurrences" on the Project Dashboard.  Returns an array of recent counts as `[timestamp, count]` pairs, where each count is the number of matching active occurrences in the time range `[timestamp, timestamp + bucket_size - 1]`.  Timestamps are UNIX timestamps, in whole seconds.  # Response ```json {   "err": 0,   "result": [     [       // timestamp       1728561200,       // count (number of occurrences from time 1728561200 until time 1728564799)       0     ],     [       1728564800,       0     ],     [       1728568400,       0     ],     [       1728572000,       6     ]   ] }```
+- [Get activated item counts](https://docs.rollbar.com/reference/get-activated-item-counts.md): Analogous to "Daily New/Reactivated Items" graph on the Project Dashboard.  Returns an array of recent counts as `[timestamp, count]` pairs, where each count is the number of items that were first seen or reactivated in the time range `[timestamp, timestamp + bucket_size - 1]`.  Timestamps are UNIX timestamps, in whole seconds.    # Response ```json {   "err": 0,   "result": [     [       // timestamp       1728561200,       // count (number of occurrences from time 1728561200 until time 1728564799)       0     ],     [       1728564800,       0     ],     [       1728568400,       0     ],     [       1728572000,       6     ]   ] }```
+- [Create a project](https://docs.rollbar.com/reference/create-a-project.md)
+- [List all projects](https://docs.rollbar.com/reference/list-all-projects.md)
+- [Get a project](https://docs.rollbar.com/reference/get-a-project.md)
+- [Delete a project](https://docs.rollbar.com/reference/delete-a-project.md)
+- [List all project access tokens](https://docs.rollbar.com/reference/list-all-project-access-tokens.md)
+- [Create a project access token](https://docs.rollbar.com/reference/post_api-1-project-project-id-access-tokens.md): Create a project access token
+- [Update a rate limit (token identifier in the path)](https://docs.rollbar.com/reference/update-a-rate-limit.md): To update the rate limit, include either the legacy access token or the secure public ID in the token_identifier field of the URL.
+- [Delete a project access token (token identifier in the path)](https://docs.rollbar.com/reference/delete-a-project-access-token.md): To delete a project access token, include either the legacy access token or the secure public ID in the token_identifier field of the URL.
+- [Update a rate limit (token identifier in the body)](https://docs.rollbar.com/reference/update-a-rate-limit-2.md): To update a rate limit for a project access token, provide either the project_access_token value or the token’s public_id in the body parameters.
+- [Delete a project access token (token identifier in the body)](https://docs.rollbar.com/reference/delete-a-project-access-token-2.md): To delete a project access token, provide either the project_access_token value or the token’s public_id in the body parameters.
+- [Create a team](https://docs.rollbar.com/reference/create-a-team.md): # Access Levels `standard` is the only access level you can choose in the UI.  `light` and `view` are API-only team access levels. `light` gives the team read and write access, but not to all settings. `view` gives the team read-only access.
+- [List all teams](https://docs.rollbar.com/reference/list-all-teams.md)
+- [Get a team](https://docs.rollbar.com/reference/get-a-team.md)
+- [Delete a team](https://docs.rollbar.com/reference/delete-a-team.md)
+- [List all users](https://docs.rollbar.com/reference/list-all-users.md): List all users who are members of an account #Response Format ```json {   "err": 0,   "result": {     "users": [     {       "username": "brianr",       "id": 1,       "email": "brian@rollbar.com"     },     {       "username": "coryvirok",       "id": 2,       "email": "cory@rollbar.com"     }     ]   } } ```
+- [Get a user](https://docs.rollbar.com/reference/get-a-user.md): Get user details for a given account  Returns basic information about the user, as relevant to the account your access token is for. This is the same information available on the "Members" page in the Rollbar UI.  # Sample Response ```json {   "err": 0,   "result": {       "id": 14,       "username": "brian",       "email": "brian@rollbar.com",       "email_enabled": 1   } } ```
+- [List a team's users](https://docs.rollbar.com/reference/list-a-teams-users.md)
+- [Check if a user is assigned to a team](https://docs.rollbar.com/reference/check-if-a-user-is-assigned-to-a-team.md)
+- [Assign a user to team](https://docs.rollbar.com/reference/assign-a-user-to-team.md)
+- [Remove a user from a team](https://docs.rollbar.com/reference/remove-a-user-from-a-team.md)
+- [List a user's teams](https://docs.rollbar.com/reference/list-a-users-teams.md)
+- [List invitations to a team](https://docs.rollbar.com/reference/list-invitations-to-a-team.md): Returns all invites ever sent for the team–pending, accepted, rejected, and canceled.  # Example response ``` {   "err": 0,   "result": [     {       "id": 71328,       "from_user_id": 5325,       "team_id": 272686,       "to_email": "gilfoyle@pidepiper.com",       "status": "pending",       "date_created": 1519946545,       "date_redeemed": null     }   ] } ```
+- [Invite an email address to a team](https://docs.rollbar.com/reference/invite-an-email-address-to-a-team.md): Invites a user to the specific team, using the user's email address.  If the email address belongs to an existing Rollbar user, they will be immediately added to the team, and sent an email notification. Otherwise, an invite email will be sent, containing a signup link that will allow the recipient to join the specified team.  # Example Response ``` {   "err": 0,   "result": {     "id": 71328,     "from_user_id": 5325,     "team_id": 272686,     "to_email": "gilfoyle@piedpiper.com",     "status": "pending",     "date_created": 1519946545,     "date_redeemed": null   } } ```
+- [Get invitation](https://docs.rollbar.com/reference/get-invitation.md): # Example Response ```json {   "err": 0,   "result": {     "id": 71328,     "from_user_id": 5325,     "team_id": 272686,     "to_email": "gilfoyle@piedpiper.com",     "status": "pending",     "date_created": 1519946545,     "date_redeemed": null   } } ```
+- [Cancel invitation](https://docs.rollbar.com/reference/cancel-invitation.md): Returns a `200` if the invitation was successfully canceled.
+- [List a team's projects](https://docs.rollbar.com/reference/list-a-teams-projects.md): # Example Response ```json {   "err": 0,   "result": [     {       "team_id": 272686,       "project_id": 178029     },     {       "team_id": 272686,       "project_id": 178030     }   ] } ```
+- [List a project's teams](https://docs.rollbar.com/reference/list-a-projects-teams.md): # Example Response ```json {   "err": 0,   "result": [     {       "team_id": 272686,       "project_id": 178029     },     {       "team_id": 272687,       "project_id": 178029     }   ] } ```
+- [Check if a team is assigned to a project](https://docs.rollbar.com/reference/check-if-a-team-is-assigned-to-a-project.md): Returns `200` if the team is assigned to a project, `404` if the team is not assigned to the project.  # Example responses  ```json {   "err": 0,   "result": {     "team_id": 272686,     "project_id": 165090   } } ```  ```json {   "err": 1,   "message": "Project is not in this Team." } ```
+- [Assign a team to a project](https://docs.rollbar.com/reference/assign-a-team-to-a-project.md): # Example Response ```json {   "err": 0,   "result": {     "team_id": 272686,     "project_id": 165090   } } ```
+- [Remove a team from a project](https://docs.rollbar.com/reference/remove-a-team-from-a-project.md)
+- [List a user's projects](https://docs.rollbar.com/reference/list-a-users-projects.md): # Example response: ```json {   "err": 0,   "result": {     "projects": [       {         "status": 1,         "slug": "mox",         "id": 1,         "account_id": 61       },       {         "status": 1,         "slug": "moxrts",         "id": 25,         "account_id": 61       }     ]   } }```
+- [Request person deletion](https://docs.rollbar.com/reference/delete-a-person.md): This endpoint allows for removal of a tracked person from all projects within an account.  To identify the person, you must provide **exactly one** of the following: * `email` * `username` * `person_id`  These correspond to the values transmitted in the original occurrences (see the docs for [Create item](ref:create-item)) and can also be found by viewing any tracked person via the [People Tracking](doc:person-tracking) page in any project.  Requests for person deletion are asynchronous.  The returned value will include an `id` property that can be used to check the status of the deletion process, e.g. ``` {   "err": 0,   "result": {     "id": 3   } } ```
+- [Get person deletion status](https://docs.rollbar.com/reference/get-person-deletion-status.md): Check on the status of a person deletion request.  The response will include a status, e.g. ``` {   "err": 0,   "result": {     "state": "success", // possible values are "new","running","paused","success","cancelled","failed"     "id": 3   } } ```
+- [/api/1/notifications/slack](https://docs.rollbar.com/reference/put_api-1-notifications-slack.md): Configuring Slack integration
+- [/api/1/notifications/webhook](https://docs.rollbar.com/reference/put_api-1-notifications-webhook.md): Configuring Webhook integration
+- [/api/1/notifications/pagerduty](https://docs.rollbar.com/reference/put_api-1-notifications-pagerduty.md): Configuring PagerDuty integration
+- [/api/1/notifications/email](https://docs.rollbar.com/reference/put_api-1-notifications-email.md): Configuring Email Notifications integration
+- [/api/1/notifications/slack/rules](https://docs.rollbar.com/reference/post_api-1-notifications-slack-rules.md): Create Slack notification rules
+- [Replace existing notification rules](https://docs.rollbar.com/reference/put_api-1-notifications-slack-rules.md): This endpoint replaces all existing rules for the channel with the ones provided. To update a specific rule, use the `/api/1/notifications/slack/rule/{rule_id}` endpoint instead. To add new rules, use the `POST` endpoint.
+- [/api/1/notifications/slack/rules](https://docs.rollbar.com/reference/get_api-1-notifications-slack-rules.md): Get all Slack rules
+- [/api/1/notifications/slack/rule/{rule_id}](https://docs.rollbar.com/reference/get_api-1-notifications-slack-rule-rule-id.md): Get a notification rule by ID
+- [/api/1/notifications/slack/rule/{rule_id}](https://docs.rollbar.com/reference/put_api-1-notifications-slack-rule-rule-id.md): Update a notification rule by ID
+- [/api/1/notifications/slack/rule/{rule_id}](https://docs.rollbar.com/reference/delete_api-1-notifications-slack-rule-rule-id.md): Delete a notification rule by ID
+- [/api/1/notifications/pagerduty](https://docs.rollbar.com/reference/post_api-1-notifications-pagerduty.md): Create PagerDuty notification rules
+- [Replace existing notification rules](https://docs.rollbar.com/reference/put_api-1-notifications-pagerduty-rules.md): This endpoint replaces all existing rules for the channel with the ones provided. To update a specific rule, use the `/api/1/notifications/slack/rule/{rule_id}` endpoint instead. To add new rules, use the `POST` endpoint.
+- [/api/1/notifications/pagerduty/rules](https://docs.rollbar.com/reference/get_api-1-notifications-pagerduty-rules.md): Get all PagerDuty notification rules
+- [/api/1/notifications/pagerduty/rule/{rule_id}](https://docs.rollbar.com/reference/get_api-1-notifications-pagerduty-rule-rule-id.md): Get a notification rule by ID
+- [/api/1/notifications/pagerduty/rule/{rule_id}](https://docs.rollbar.com/reference/put_api-1-notifications-pagerduty-rule-rule-id.md): Update a notification rule by ID
+- [/api/1/notifications/pagerduty/rule/{rule_id}](https://docs.rollbar.com/reference/delete_api-1-notifications-pagerduty-rule-rule-id.md): Delete a notification rule by ID
+- [/api/1/notifications/email/rules](https://docs.rollbar.com/reference/post_api-1-notifications-email-rules.md): Create Email notification rules
+- [Replace existing notification rules](https://docs.rollbar.com/reference/put_api-1-notifications-email-rules.md): This endpoint replaces all existing rules for the channel with the ones provided. To update a specific rule, use the `/api/1/notifications/slack/rule/{rule_id}` endpoint instead. To add new rules, use the `POST` endpoint.
+- [/api/1/notifications/email/rules](https://docs.rollbar.com/reference/get_api-1-notifications-email-rules.md): Get all email notification rules
+- [/api/1/notifications/email/rule/{rule_id}](https://docs.rollbar.com/reference/get_api-1-notifications-email-rule-rule-id.md): Get a notification rule by ID
+- [/api/1/notifications/email/rule/{rule_id}](https://docs.rollbar.com/reference/put_api-1-notifications-email-rule-rule-id.md): Update a notification rule by ID
+- [/api/1/notifications/email/rule/{rule_id}](https://docs.rollbar.com/reference/delete_api-1-notifications-email-rule-rule-id.md): Delete a notification rule by ID
+- [/api/1/notifications/webhook/rules](https://docs.rollbar.com/reference/post_api-1-notifications-webhook-rules.md): Create Webhook notification rules
+- [Replace existing notification rules](https://docs.rollbar.com/reference/put_api-1-notifications-webhook-rules.md): This endpoint replaces all existing rules for the channel with the ones provided. To update a specific rule, use the `/api/1/notifications/webhook/rule/{rule_id}` endpoint instead. To add new rules, use the `POST` endpoint.
+- [/api/1/notifications/webhook/rules](https://docs.rollbar.com/reference/get_api-1-notifications-webhook-rules.md): Get all Webhook rules
+- [/api/1/notifications/webhook/rule/{rule_id}](https://docs.rollbar.com/reference/get_api-1-notifications-webhook-rule-rule-id.md): Get a notification rule by ID
+- [/api/1/notifications/webhook/rule/{rule_id}](https://docs.rollbar.com/reference/put_api-1-notifications-webhook-rule-rule-id.md): Update a notification rule by ID
+- [/api/1/notifications/webhook/rule/{rule_id}](https://docs.rollbar.com/reference/delete_api-1-notifications-webhook-rule-rule-id.md): Delete a notification rule by ID
+- [Get a session replay](https://docs.rollbar.com/reference/get_api-1-environment-environment-session-sessionid-replay-replayid.md): Retrieves the replay payload for a recorded session in the specified environment. Requires a project access token with `read` scope.
+- [Delete a session replay](https://docs.rollbar.com/reference/delete_api-1-environment-environment-session-sessionid-replay-replayid.md): Deletes a replay for a recorded session in the specified environment. Requires a project access token with `write` scope.
+- [/api/1/service_links](https://docs.rollbar.com/reference/get_api-1-service-links.md): Get all Service Links
+- [/api/1/service_links](https://docs.rollbar.com/reference/post_api-1-service-links.md): Create Service Links
+- [/api/1/service_links/{id}](https://docs.rollbar.com/reference/put_api-1-service-links-id.md): Replace existing Service Link
+- [/api/1/service_links/{id}](https://docs.rollbar.com/reference/get_api-1-service-links-id.md): Get existing Service Link by id
+- [/api/1/service_links/{id}](https://docs.rollbar.com/reference/delete_api-1-service-links-id.md): Delete existing Service Link
+- [Code version details in one project](https://docs.rollbar.com/reference/get_api-1-versions-version.md): Returns the details about one specific code version in one project  https://docs.rollbar.com/docs/versions
+- [List items by code version](https://docs.rollbar.com/reference/get_api-1-versions-version-items.md): List items that have occurrences for one specific code version.  https://docs.rollbar.com/docs/versions

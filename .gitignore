@@ -7,3 +7,5 @@ dist/
 .vite/
 .DS_Store
 ref/
+packages/docs-import/.venv/
+packages/docs-import/uv.lock
