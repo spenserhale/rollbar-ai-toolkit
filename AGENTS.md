@@ -53,7 +53,7 @@ This is a committed snapshot — grep it freely, but do not hand-edit. To refres
 Before editing, check whether the task touches one of these areas and read the referenced doc first:
 
 - SDK changes (types, client, config, errors): read `docs/sdk.md`
-- CLI changes (commands, flags, output format, agent-context): read `docs/cli.md`
+- CLI changes (commands, flags, output format, agent-context): read `docs/cli.md` **and** invoke the `agent-native-cli-creator` skill (mandatory — see below)
 - MCP changes (tool registration, schemas, stdio): read `docs/mcp.md`
 - Writing or updating tests: read `docs/testing.md`
 
@@ -62,6 +62,10 @@ Before editing, check whether the task touches one of these areas and read the r
 Use `.agents/skills/` when the task matches a documented workflow:
 
 - `.agents/skills/add-api-operation/` — Add a new Rollbar API operation end-to-end (SDK → CLI → MCP)
+
+### Mandatory: `agent-native-cli-creator` for any CLI work
+
+**Any change to `packages/cli/` MUST invoke the `agent-native-cli-creator` skill before writing code.** This includes adding commands, renaming flags, changing output formats, modifying `agent-context`, touching `output.ts`, error handling, or anything in `packages/cli/src/`. The skill encodes the two-tier design system this CLI commits to follow — vocabulary (`get`/`list`/`create`/`update`/`delete`, `--force`, `--toon`/`--json`/`--csv`, `--limit`, `--cursor`, `--profile`, `--dry-run`, `--wait`), three-layer introspection (`--help` → `agent-context` → skill manifest), bounded outputs, enumerated errors, idempotency, `--deliver`, `feedback`. `docs/cli.md` enforces the project-specific shape of these rules; the skill is the canonical reference for _why_ and the cross-CLI patterns. If you skip the skill on CLI work, you will drift the surface and the change will get reverted.
 
 ## Done criteria
 

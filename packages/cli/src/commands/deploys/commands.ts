@@ -1,5 +1,6 @@
 import { buildCommand, buildRouteMap } from "@stricli/core";
 import { outputFlagDefs } from "../../output.js";
+import { clientFlagDefs } from "../../client-flags.js";
 
 export const listCommand = buildCommand({
   loader: async () => {
@@ -34,12 +35,7 @@ export const listCommand = buildCommand({
         brief: "Page number for pagination",
         default: "1",
       },
-      token: {
-        kind: "parsed",
-        parse: String,
-        brief: "Override project access token",
-        optional: true,
-      },
+      ...clientFlagDefs,
     },
   },
   docs: { brief: "List deploys" },
@@ -57,12 +53,7 @@ export const getCommand = buildCommand({
     },
     flags: {
       ...outputFlagDefs,
-      token: {
-        kind: "parsed",
-        parse: String,
-        brief: "Override project access token",
-        optional: true,
-      },
+      ...clientFlagDefs,
     },
   },
   docs: { brief: "Get a specific deploy" },

@@ -1,5 +1,6 @@
 import { buildCommand, buildRouteMap } from "@stricli/core";
 import { outputFlagDefs } from "../../output.js";
+import { clientFlagDefs } from "../../client-flags.js";
 
 export const getCommand = buildCommand({
   loader: async () => {
@@ -23,12 +24,7 @@ export const getCommand = buildCommand({
         brief: "Include local variables from stack trace frames (may contain secrets)",
         optional: true,
       },
-      token: {
-        kind: "parsed",
-        parse: String,
-        brief: "Override project access token",
-        optional: true,
-      },
+      ...clientFlagDefs,
     },
   },
   docs: {
@@ -58,12 +54,7 @@ export const getByCounterCommand = buildCommand({
         brief: "Include local variables from stack trace frames (may contain secrets)",
         optional: true,
       },
-      token: {
-        kind: "parsed",
-        parse: String,
-        brief: "Override project access token",
-        optional: true,
-      },
+      ...clientFlagDefs,
     },
   },
   docs: {

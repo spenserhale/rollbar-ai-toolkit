@@ -1,25 +1,21 @@
-import { RollbarClient, resolveConfig } from "@rollbar-toolkit/sdk";
 import type { LocalContext } from "../../context.js";
 import { writeOutput, type OutputFlags } from "../../output.js";
+import { buildClientForFlags, type ClientFlags } from "../../client-flags.js";
 
-interface TopItemDetailsFlags extends OutputFlags {
+interface TopItemDetailsFlags extends OutputFlags, ClientFlags {
   readonly window: string;
   readonly limit: number;
-  readonly status: string;
-  readonly level?: string;
+  readonly status: "active" | "resolved" | "muted" | "archived";
+  readonly level?: "critical" | "error" | "warning" | "info" | "debug";
   readonly environment?: string;
   readonly includeVars?: boolean;
-  readonly token?: string;
 }
 
 export async function topItemDetails(
   this: LocalContext,
   flags: TopItemDetailsFlags,
 ): Promise<void> {
-  const client = flags.token
-    ? new RollbarClient(resolveConfig({ projectToken: flags.token }))
-    : this.rollbar;
-
+  const client = await buildClientForFlags(flags);
   const result = await client.listTopItemDetails({
     window: flags.window,
     limit: flags.limit,
@@ -28,6 +24,5 @@ export async function topItemDetails(
     environment: flags.environment,
     includeVars: flags.includeVars,
   });
-
-  writeOutput(this.process.stdout, result, flags);
+  await writeOutput(this.process.stdout, result, flags);
 }

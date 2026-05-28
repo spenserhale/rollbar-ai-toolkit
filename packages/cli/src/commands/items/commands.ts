@@ -1,5 +1,6 @@
 import { buildCommand, buildRouteMap } from "@stricli/core";
 import { outputFlagDefs } from "../../output.js";
+import { clientFlagDefs } from "../../client-flags.js";
 
 export const listCommand = buildCommand({
   loader: async () => {
@@ -11,15 +12,15 @@ export const listCommand = buildCommand({
     flags: {
       ...outputFlagDefs,
       status: {
-        kind: "parsed",
-        parse: String,
-        brief: "Filter by status (active, resolved, muted, archived)",
+        kind: "enum",
+        values: ["active", "resolved", "muted", "archived"] as const,
+        brief: "Filter by status",
         optional: true,
       },
       level: {
-        kind: "parsed",
-        parse: String,
-        brief: "Filter by level (critical, error, warning, info, debug)",
+        kind: "enum",
+        values: ["critical", "error", "warning", "info", "debug"] as const,
+        brief: "Filter by severity level",
         optional: true,
       },
       environment: {
@@ -40,12 +41,7 @@ export const listCommand = buildCommand({
         brief: "Page number for pagination",
         default: "1",
       },
-      token: {
-        kind: "parsed",
-        parse: String,
-        brief: "Override project access token",
-        optional: true,
-      },
+      ...clientFlagDefs,
     },
   },
   docs: { brief: "List items (errors) from Rollbar" },
@@ -63,12 +59,7 @@ export const getCommand = buildCommand({
     },
     flags: {
       ...outputFlagDefs,
-      token: {
-        kind: "parsed",
-        parse: String,
-        brief: "Override project access token",
-        optional: true,
-      },
+      ...clientFlagDefs,
     },
   },
   docs: { brief: "Get an item by ID" },
@@ -86,12 +77,7 @@ export const getByCounterCommand = buildCommand({
     },
     flags: {
       ...outputFlagDefs,
-      token: {
-        kind: "parsed",
-        parse: String,
-        brief: "Override project access token",
-        optional: true,
-      },
+      ...clientFlagDefs,
     },
   },
   docs: { brief: "Get an item by project counter" },

@@ -1,5 +1,6 @@
 import { buildCommand } from "@stricli/core";
 import { outputFlagDefs } from "../../output.js";
+import { clientFlagDefs } from "../../client-flags.js";
 
 export const topItemDetailsCommand = buildCommand({
   loader: async () => {
@@ -26,15 +27,15 @@ export const topItemDetailsCommand = buildCommand({
         default: "10",
       },
       status: {
-        kind: "parsed",
-        parse: String,
-        brief: "Filter by item status (default: active)",
+        kind: "enum",
+        values: ["active", "resolved", "muted", "archived"] as const,
+        brief: "Filter by item status",
         default: "active",
       },
       level: {
-        kind: "parsed",
-        parse: String,
-        brief: "Filter by level (critical, error, warning, info, debug)",
+        kind: "enum",
+        values: ["critical", "error", "warning", "info", "debug"] as const,
+        brief: "Filter by severity level",
         optional: true,
       },
       environment: {
@@ -48,12 +49,7 @@ export const topItemDetailsCommand = buildCommand({
         brief: "Include local variables from stack trace frames (may contain secrets)",
         optional: true,
       },
-      token: {
-        kind: "parsed",
-        parse: String,
-        brief: "Override project access token",
-        optional: true,
-      },
+      ...clientFlagDefs,
     },
   },
   docs: {

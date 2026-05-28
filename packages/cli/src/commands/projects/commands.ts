@@ -1,5 +1,6 @@
 import { buildCommand, buildRouteMap } from "@stricli/core";
 import { outputFlagDefs } from "../../output.js";
+import { clientFlagDefs } from "../../client-flags.js";
 
 export const listCommand = buildCommand({
   loader: async () => {
@@ -13,12 +14,7 @@ export const listCommand = buildCommand({
     },
     flags: {
       ...outputFlagDefs,
-      token: {
-        kind: "parsed",
-        parse: String,
-        brief: "Account access token override",
-        optional: true,
-      },
+      ...clientFlagDefs,
     },
   },
   docs: {
@@ -43,12 +39,7 @@ export const getCommand = buildCommand({
     },
     flags: {
       ...outputFlagDefs,
-      token: {
-        kind: "parsed",
-        parse: String,
-        brief: "Account access token override",
-        optional: true,
-      },
+      ...clientFlagDefs,
     },
   },
   docs: {

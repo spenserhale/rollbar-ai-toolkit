@@ -1,29 +1,19 @@
-import { RollbarClient, resolveConfig } from "@rollbar-toolkit/sdk";
 import type { LocalContext } from "../../context.js";
 import { writeOutput, type OutputFlags } from "../../output.js";
+import { buildClientForFlags, type ClientFlags } from "../../client-flags.js";
 
-interface ListFlags extends OutputFlags {
-  readonly token?: string;
-}
-
-export async function list(this: LocalContext, flags: ListFlags): Promise<void> {
-  const client = flags.token
-    ? new RollbarClient(resolveConfig({ accountToken: flags.token }))
-    : this.rollbar;
-
+export async function list(this: LocalContext, flags: ClientFlags & OutputFlags): Promise<void> {
+  const client = await buildClientForFlags(flags);
   const result = await client.listProjects();
-  writeOutput(this.process.stdout, result, flags);
+  await writeOutput(this.process.stdout, { projects: result }, flags);
 }
 
-interface GetFlags extends OutputFlags {
-  readonly token?: string;
-}
-
-export async function get(this: LocalContext, flags: GetFlags, id: number): Promise<void> {
-  const client = flags.token
-    ? new RollbarClient(resolveConfig({ accountToken: flags.token }))
-    : this.rollbar;
-
+export async function get(
+  this: LocalContext,
+  flags: ClientFlags & OutputFlags,
+  id: number,
+): Promise<void> {
+  const client = await buildClientForFlags(flags);
   const result = await client.getProject(id);
-  writeOutput(this.process.stdout, result, flags);
+  await writeOutput(this.process.stdout, result, flags);
 }
