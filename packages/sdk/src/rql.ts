@@ -47,6 +47,7 @@ export function buildAffectedUsersQuery(itemId: number, limit: number, minTimest
 
 /** Append `LIMIT n` only when the query has no LIMIT of its own. Safe append-only rewrite. */
 export function injectLimit(sql: string, limit: number): string {
+  intOrThrow(limit, "limit");
   if (/\blimit\s+\d+/i.test(sql)) return sql;
   return `${sql.trimEnd().replace(/;\s*$/, "")} LIMIT ${limit}`;
 }

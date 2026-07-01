@@ -71,6 +71,9 @@ describe("injectLimit", () => {
   it("does not treat a bare `limit` column name as a LIMIT clause", () => {
     expect(injectLimit("SELECT limit FROM t", 5)).toBe("SELECT limit FROM t LIMIT 5");
   });
+  it("rejects a non-integer limit", () => {
+    expect(() => injectLimit("SELECT 1", 3.5)).toThrow(/limit/);
+  });
 });
 
 describe("findItemColumn", () => {
