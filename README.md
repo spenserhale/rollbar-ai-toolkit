@@ -15,6 +15,14 @@ chmod +x rollbar
 ./rollbar --help
 ```
 
+Once installed, the standalone binary can update itself:
+
+```bash
+rollbar upgrade            # download & install the latest release (verifies sha256)
+rollbar upgrade --check    # report whether a newer version is available
+rollbar upgrade --version 0.3.0   # install a specific version
+```
+
 ### Or run with Bun
 
 ```bash
@@ -47,10 +55,17 @@ rollbar items list                          # List error items
 rollbar items list --status active          # Filter by status
 rollbar items list --level critical         # Filter by level
 rollbar items list --environment production # Filter by environment
-rollbar items get 12345                     # Get item by ID
-rollbar items get-by-counter 42            # Get item by project counter (#42 in UI)
-rollbar items top                           # Top 10 most-occurring items in the last 30d
+rollbar items get 12345                     # Get item metadata by ID
+rollbar items get-by-counter 42            # Get item metadata by project counter (#42 in UI)
+rollbar items top                           # Top 10 items by occurrence count (metadata only)
 rollbar items top --window 1d --limit 5    # Top 5 items in the last day
+
+# item-details — item PLUS its latest occurrence and full stack trace
+rollbar item-details get 12345              # Item + latest occurrence + stack trace
+rollbar item-details get-by-counter 42      # Same, by project counter
+rollbar item-details top                    # Top 10 items, each with its latest occurrence
+rollbar item-details get 12345 --include-vars   # Also include stack-frame locals (may contain secrets)
+
 rollbar occurrences list --itemId 12345    # List occurrences for an item
 rollbar occurrences get abc-123            # Get a single occurrence
 rollbar projects list                       # List all projects
@@ -62,9 +77,16 @@ rollbar environments list                   # List environments
 rollbar users list                          # List users
 rollbar users get 99                        # Get user details
 
-# RQL (Rollbar Query Language) — async; tip: always include LIMIT 10 / LIMIT 100
-rollbar rql jobs create "SELECT * FROM item_occurrence LIMIT 10"           # submit, returns job id
-rollbar rql jobs create "SELECT * FROM item_occurrence LIMIT 10" --wait    # submit, poll, return rows
+# RQL (Rollbar Query Language) — async; a LIMIT is auto-appended (default 100)
+rollbar rql query "SELECT item.counter, count(*) AS n FROM item_occurrence GROUP BY item.counter"   # run any query
+rollbar rql query "... " --enrich             # hydrate item.counter/item.id rows to full item-details
+rollbar rql by-url example.com                # top 5 items hitting a domain, each with its occurrence
+rollbar rql by-url example.com --limit 10 --window 7d
+rollbar rql affected-users 12345             # distinct affected users (id/username/email) for an item
+rollbar rql affected-users 12345 --window 30d --limit 100
+
+# Low-level async job control
+rollbar rql jobs create "SELECT * FROM item_occurrence LIMIT 10" --wait   # submit, poll, return rows
 rollbar rql jobs list                        # List recent RQL jobs
 rollbar rql jobs get 12345                   # Check status of an RQL job
 rollbar rql jobs results 12345               # Fetch rows from a completed RQL job
@@ -129,11 +151,16 @@ Or if using Bun instead of the compiled binary:
 | `list_top_items`      | Top N items by occurrence count in a time window (no enrich)  |
 | `list_users`          | List all users                                                |
 | `get_user`            | Get user by ID                                                |
+| `get_item_detailed`   | Get an item plus its latest occurrence and stack trace        |
+| `list_top_item_details` | Top-N items, each with its latest occurrence and stack trace |
 | `create_rql_job`      | Submit an RQL query; returns a queued job (always LIMIT it)   |
 | `list_rql_jobs`       | List RQL jobs                                                 |
 | `get_rql_job`         | Check status of an RQL job                                    |
 | `get_rql_job_results` | Fetch rows of a completed RQL job                             |
 | `cancel_rql_job`      | Cancel an in-flight RQL job                                   |
+| `rql_query`           | Run an arbitrary RQL query end-to-end; optional item enrich    |
+| `rql_by_url`          | Top-N items hitting a URL/domain, enriched to item-details     |
+| `rql_affected_users`  | Distinct affected users for an item (contact list)             |
 
 ## Architecture
 
