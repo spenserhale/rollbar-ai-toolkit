@@ -31,7 +31,14 @@ export type {
   GetRqlJobParams,
   WaitForRqlJobOptions,
   ErrorResponse,
+  AffectedUser,
+  RqlByUrlParams,
+  RqlByUrlItem,
+  RqlAffectedUsersParams,
+  RqlQueryParams,
+  RqlQueryOutcome,
 } from "./types.js";
+export { parseWindow } from "./client.js";
 export {
   RollbarConfigSchema,
   RollbarItemSchema,

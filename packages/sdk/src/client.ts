@@ -20,13 +20,28 @@ import type {
   TopItemDetails,
   RqlJob,
   RqlJobResult,
+  RqlJobResultPayload,
   CreateRqlJobParams,
   ListRqlJobsParams,
   GetRqlJobParams,
   WaitForRqlJobOptions,
+  RqlByUrlParams,
+  RqlByUrlItem,
+  RqlAffectedUsersParams,
+  RqlQueryParams,
+  RqlQueryOutcome,
+  AffectedUser,
 } from "./types.js";
 import { RollbarConfigSchema, ErrorResponseSchema, RQL_TERMINAL_STATUSES } from "./types.js";
 import { RollbarError, RollbarAuthError, RollbarNotFoundError } from "./errors.js";
+import {
+  buildByUrlQuery,
+  buildAffectedUsersQuery,
+  injectLimit,
+  findItemColumn,
+  readCell,
+  uniqueNumbers,
+} from "./rql.js";
 
 export class RollbarClient {
   private readonly config: RollbarConfig;
@@ -151,6 +166,14 @@ export class RollbarClient {
   ): Promise<ItemDetailed> {
     const item = await this.getItemByUuid(uuid);
     return this.enrichItemWithOccurrence(item, params);
+  }
+
+  async getItemDetailedByCounter(
+    counter: number,
+    params: GetItemDetailedParams = {},
+  ): Promise<ItemDetailed> {
+    const item = await this.getItemByCounter(counter);
+    return this.getItemDetailed(item.id, params);
   }
 
   // Bare top-N items ranked by total_occurrences within a time window. Fast — single
@@ -287,6 +310,94 @@ export class RollbarClient {
     return this.projectRequest("POST", `/rql/job/${id}/cancel`);
   }
 
+  // Submit a query, wait for it to finish successfully, and return its result payload.
+  // The one-shot RQL helpers all build on this.
+  private async runRqlToRows(
+    queryString: string,
+    waitOpts: WaitForRqlJobOptions = {},
+  ): Promise<RqlJobResultPayload> {
+    const job = await this.createRqlJob({ queryString });
+    const final = await this.waitForRqlJob(job.id, waitOpts);
+    if (final.status !== "success") {
+      throw new RollbarError(
+        `RQL job ${final.id} ended with status "${final.status}" (query did not complete successfully)`,
+        "rql_not_success",
+      );
+    }
+    const result = await this.getRqlJobResults(final.id);
+    return result.result;
+  }
+
+  async rqlByUrl(params: RqlByUrlParams): Promise<RqlByUrlItem[]> {
+    const { domain, limit = 5, window = "30d", includeVars, timeoutMs, initialIntervalMs } = params;
+    const payload = await this.runRqlToRows(buildByUrlQuery(domain, limit, parseWindow(window)), {
+      timeoutMs,
+      initialIntervalMs,
+    });
+    const columns = payload.selectionColumns ?? [];
+    const rows = payload.rows ?? [];
+    const targets = rows
+      .map((row) => ({
+        counter: Number(readCell(row, columns, "item.counter")),
+        occurrences: Number(readCell(row, columns, "occurrences")) || 0,
+      }))
+      .filter((t) => Number.isFinite(t.counter));
+    return Promise.all(
+      targets.map(async ({ counter, occurrences }) => {
+        const detailed = await this.getItemDetailedByCounter(counter, { includeVars });
+        return { ...detailed, occurrences };
+      }),
+    );
+  }
+
+  async rqlAffectedUsers(params: RqlAffectedUsersParams): Promise<AffectedUser[]> {
+    const { itemId, limit = 100, window = "30d", timeoutMs, initialIntervalMs } = params;
+    const payload = await this.runRqlToRows(
+      buildAffectedUsersQuery(itemId, limit, parseWindow(window)),
+      { timeoutMs, initialIntervalMs },
+    );
+    const columns = payload.selectionColumns ?? [];
+    return (payload.rows ?? []).map((row) => ({
+      id: strOrNull(readCell(row, columns, "person.id")),
+      username: strOrNull(readCell(row, columns, "person.username")),
+      email: strOrNull(readCell(row, columns, "person.email")),
+      occurrences: Number(readCell(row, columns, "occurrences")) || 0,
+    }));
+  }
+
+  async rqlQuery(params: RqlQueryParams): Promise<RqlQueryOutcome> {
+    const { queryString, limit = 100, window, enrich, includeVars, timeoutMs, initialIntervalMs } =
+      params;
+    const warnings: string[] = [];
+    if (window && !/\btimestamp\b/i.test(queryString)) {
+      warnings.push(
+        "window not applied — RQL queries aren't rewritten; add a `timestamp >= <epoch>` clause to bound your query.",
+      );
+    }
+    const payload = await this.runRqlToRows(injectLimit(queryString, limit), {
+      timeoutMs,
+      initialIntervalMs,
+    });
+    const outcome: RqlQueryOutcome = { result: payload, warnings };
+    if (enrich) {
+      const columns = payload.selectionColumns ?? [];
+      const col = findItemColumn(columns);
+      if (!col) {
+        warnings.push("enrich skipped — result has no `item.counter` or `item.id` column.");
+      } else {
+        const ids = uniqueNumbers((payload.rows ?? []).map((r) => readCell(r, columns, col.name)));
+        outcome.items = await Promise.all(
+          ids.map((id) =>
+            col.kind === "counter"
+              ? this.getItemDetailedByCounter(id, { includeVars })
+              : this.getItemDetailed(id, { includeVars }),
+          ),
+        );
+      }
+    }
+    return outcome;
+  }
+
   // Poll getRqlJob until the job reaches a terminal status (success/failed/cancelled/timed_out)
   // or the wall-clock timeout elapses. Uses exponential backoff with jitter so a slow
   // query doesn't hammer the API. Callers fetch results separately via getRqlJobResults.
@@ -334,13 +445,18 @@ function isTerminalRqlStatus(status: string): boolean {
 
 const WINDOW_UNITS: Record<string, number> = { h: 3600, d: 86400, w: 604800, m: 2592000 };
 
-function parseWindow(window: string): number {
+export function parseWindow(window: string): number {
   const match = /^(\d+)(h|d|w|m)$/.exec(window);
   if (!match) {
     throw new Error(`Invalid window "${window}". Expected format: 24h, 7d, 30d, 12w, 3m`);
   }
   const seconds = WINDOW_UNITS[match[2]!]!;
   return Math.floor(Date.now() / 1000) - Number(match[1]) * seconds;
+}
+
+function strOrNull(v: unknown): string | null {
+  if (v === null || v === undefined || v === "") return null;
+  return String(v);
 }
 
 const FRAME_VAR_KEYS = ["locals", "args", "kwargs", "varnames"];

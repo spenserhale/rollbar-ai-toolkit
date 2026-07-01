@@ -232,6 +232,59 @@ export interface CreateRqlJobParams {
   forceRefresh?: boolean;
 }
 
+export interface AffectedUser {
+  id: string | null;
+  username: string | null;
+  email: string | null;
+  occurrences: number;
+}
+
+/** Wait/poll knobs shared by the one-shot RQL helpers. */
+export interface RqlWaitOptions {
+  timeoutMs?: number;
+  initialIntervalMs?: number;
+}
+
+export interface RqlByUrlParams extends RqlWaitOptions {
+  domain: string;
+  /** default 5 */
+  limit?: number;
+  /** human window, e.g. "30d" / "1w" (default "30d") */
+  window?: string;
+  includeVars?: boolean;
+}
+
+export interface RqlByUrlItem extends ItemDetailed {
+  occurrences: number;
+}
+
+export interface RqlAffectedUsersParams extends RqlWaitOptions {
+  itemId: number;
+  /** default 100 */
+  limit?: number;
+  /** human window, e.g. "30d" (default "30d") */
+  window?: string;
+}
+
+export interface RqlQueryParams extends RqlWaitOptions {
+  queryString: string;
+  /** master default 100; appended only if the query has no LIMIT */
+  limit?: number;
+  /** human window; not injected into arbitrary SQL — see warnings */
+  window?: string;
+  /** hydrate item.counter/item.id rows to full item-details */
+  enrich?: boolean;
+  includeVars?: boolean;
+}
+
+export interface RqlQueryOutcome {
+  result: RqlJobResultPayload;
+  /** present only when enrich requested AND an item column was found */
+  items?: ItemDetailed[];
+  /** non-fatal notices (e.g. window-not-applied, enrich-no-item-column) */
+  warnings: string[];
+}
+
 export interface ListRqlJobsParams {
   page?: number;
 }
