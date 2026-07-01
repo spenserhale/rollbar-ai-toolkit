@@ -9,6 +9,7 @@ import { environmentsRoutes } from "./commands/environments/commands.js";
 import { usersRoutes } from "./commands/users/commands.js";
 import { rqlJobsRoutes } from "./commands/rql-jobs/commands.js";
 import { agentContextCommand } from "./commands/agent-context/commands.js";
+import { upgradeCommand } from "./commands/upgrade.js";
 import { profileRoutes } from "./commands/profile/commands.js";
 import { feedbackRoutes } from "./commands/feedback/commands.js";
 import { ValidationError } from "./validation.js";
@@ -31,6 +32,7 @@ const routes = buildRouteMap({
     profile: profileRoutes,
     feedback: feedbackRoutes,
     "agent-context": agentContextCommand,
+    upgrade: upgradeCommand,
   },
   docs: {
     brief: "Rollbar CLI — manage items, deploys, projects, and more",
