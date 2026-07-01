@@ -14,6 +14,8 @@ import type {
   ListDeploysResult,
   GetItemDetailedParams,
   ItemDetailed,
+  TopItemsParams,
+  TopItem,
   TopItemDetailsParams,
   TopItemDetails,
   RqlJob,
@@ -151,29 +153,34 @@ export class RollbarClient {
     return this.enrichItemWithOccurrence(item, params);
   }
 
-  async listTopItemDetails(params: TopItemDetailsParams = {}): Promise<TopItemDetails[]> {
-    const {
-      window: windowStr = "30d",
-      limit = 10,
-      status = "active",
-      level,
-      environment,
-      includeVars,
-    } = params;
+  // Bare top-N items ranked by total_occurrences within a time window. Fast — single
+  // listItems call, no per-item enrichment. Use this when you just need the ranking;
+  // use listTopItemDetails when you also need each item's latest occurrence + stack trace.
+  async listTopItems(params: TopItemsParams = {}): Promise<TopItem[]> {
+    const ranked = await this.rankTopItems(params);
+    return ranked.map((item, i) => ({ ...item, rank: i + 1 }));
+  }
 
+  async listTopItemDetails(params: TopItemDetailsParams = {}): Promise<TopItemDetails[]> {
+    const ranked = await this.rankTopItems(params);
+    return Promise.all(
+      ranked.map((item, i) =>
+        this.enrichItemWithOccurrence(item, { includeVars: params.includeVars }).then((d) => ({
+          ...d,
+          rank: i + 1,
+        })),
+      ),
+    );
+  }
+
+  private async rankTopItems(params: TopItemsParams): Promise<RollbarItem[]> {
+    const { window: windowStr = "30d", limit = 10, status = "active", level, environment } = params;
     const minTimestamp = parseWindow(windowStr);
     const { items } = await this.listItems({ status, level, environment, limit: 100 });
-
-    const ranked = items
+    return items
       .filter((item) => item.last_occurrence_timestamp >= minTimestamp)
       .sort((a, b) => b.total_occurrences - a.total_occurrences)
       .slice(0, limit);
-
-    return Promise.all(
-      ranked.map((item, i) =>
-        this.enrichItemWithOccurrence(item, { includeVars }).then((d) => ({ ...d, rank: i + 1 })),
-      ),
-    );
   }
 
   private async enrichItemWithOccurrence(

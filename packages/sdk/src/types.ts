@@ -109,13 +109,20 @@ export interface ItemDetailed {
   latestOccurrence: RollbarOccurrence | null;
 }
 
-export interface TopItemDetailsParams {
+export interface TopItemsParams {
   /** Time window to look back — "24h", "7d", "30d", "90d" (default: "30d") */
   window?: string;
   limit?: number;
   status?: string;
   level?: string;
   environment?: string;
+}
+
+export interface TopItem extends RollbarItem {
+  rank: number;
+}
+
+export interface TopItemDetailsParams extends TopItemsParams {
   includeVars?: boolean;
 }
 

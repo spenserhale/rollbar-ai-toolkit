@@ -2,7 +2,6 @@ import { ArgumentScannerError, buildApplication, buildRouteMap, text_en } from "
 import { RollbarAuthError, RollbarError, RollbarNotFoundError } from "@rollbar-toolkit/sdk";
 import { itemsRoutes } from "./commands/items/commands.js";
 import { itemDetailsRoutes } from "./commands/item-details/commands.js";
-import { topItemDetailsCommand } from "./commands/top-item-details/commands.js";
 import { occurrencesRoutes } from "./commands/occurrences/commands.js";
 import { projectsRoutes } from "./commands/projects/commands.js";
 import { deploysRoutes } from "./commands/deploys/commands.js";
@@ -23,7 +22,6 @@ const routes = buildRouteMap({
   routes: {
     items: itemsRoutes,
     "item-details": itemDetailsRoutes,
-    "top-item-details": topItemDetailsCommand,
     occurrences: occurrencesRoutes,
     projects: projectsRoutes,
     deploys: deploysRoutes,

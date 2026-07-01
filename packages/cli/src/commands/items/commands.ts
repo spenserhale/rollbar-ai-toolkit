@@ -83,11 +83,60 @@ export const getByCounterCommand = buildCommand({
   docs: { brief: "Get an item by project counter" },
 });
 
+export const topCommand = buildCommand({
+  loader: async () => {
+    const { top } = await import("./impl.js");
+    return top;
+  },
+  parameters: {
+    positional: { kind: "tuple", parameters: [] },
+    flags: {
+      ...outputFlagDefs,
+      window: {
+        kind: "parsed",
+        parse: String,
+        brief: "Look-back window: 24h, 7d, 30d, 12w, 3m (default: 30d)",
+        default: "30d",
+      },
+      limit: {
+        kind: "parsed",
+        parse: Number,
+        brief: "Number of top items to return (default: 10)",
+        default: "10",
+      },
+      status: {
+        kind: "enum",
+        values: ["active", "resolved", "muted", "archived"] as const,
+        brief: "Filter by item status",
+        default: "active",
+      },
+      level: {
+        kind: "enum",
+        values: ["critical", "error", "warning", "info", "debug"] as const,
+        brief: "Filter by severity level",
+        optional: true,
+      },
+      environment: {
+        kind: "parsed",
+        parse: String,
+        brief: "Filter by environment",
+        optional: true,
+      },
+      ...clientFlagDefs,
+    },
+  },
+  docs: {
+    brief:
+      "List the top N most-occurring items in a time window (fast; no occurrence enrichment — use `item-details top` for that)",
+  },
+});
+
 export const itemsRoutes = buildRouteMap({
   routes: {
     list: listCommand,
     get: getCommand,
     "get-by-counter": getByCounterCommand,
+    top: topCommand,
   },
   docs: { brief: "Manage Rollbar items (errors)" },
 });

@@ -97,6 +97,39 @@ export function registerResourceTools(server: FastMCP) {
   });
 
   server.addTool({
+    name: "list_top_items",
+    description:
+      "List the top N most-occurring Rollbar items in a time window, ranked by total_occurrences. Fast — no per-item enrichment. Use list_top_item_details when you also need each item's latest occurrence and stack trace.",
+    parameters: z.object({
+      window: z
+        .string()
+        .default("30d")
+        .describe("Look-back window: 24h, 7d, 30d, 12w, 3m (default: 30d)"),
+      limit: z
+        .number()
+        .int()
+        .positive()
+        .max(50)
+        .default(10)
+        .describe("Number of top items to return (default 10, max 50)"),
+      status: z
+        .enum(["active", "resolved", "muted", "archived"])
+        .default("active")
+        .describe("Filter by item status (default: active)"),
+      level: z
+        .enum(["debug", "info", "warning", "error", "critical"])
+        .optional()
+        .describe("Filter by severity level"),
+      environment: z.string().optional().describe('Filter by environment name, e.g. "production"'),
+    }),
+    execute: async (args) => {
+      const client = getClient();
+      const result = await client.listTopItems(args);
+      return JSON.stringify(result, null, 2);
+    },
+  });
+
+  server.addTool({
     name: "list_top_item_details",
     description:
       "List the top N most-occurring Rollbar items in a time window, each enriched with its latest occurrence and stack trace. Useful for identifying the noisiest errors without making separate calls per item.",

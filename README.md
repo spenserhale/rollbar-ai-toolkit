@@ -49,6 +49,8 @@ rollbar items list --level critical         # Filter by level
 rollbar items list --environment production # Filter by environment
 rollbar items get 12345                     # Get item by ID
 rollbar items get-by-counter 42            # Get item by project counter (#42 in UI)
+rollbar items top                           # Top 10 most-occurring items in the last 30d
+rollbar items top --window 1d --limit 5    # Top 5 items in the last day
 rollbar occurrences list --itemId 12345    # List occurrences for an item
 rollbar occurrences get abc-123            # Get a single occurrence
 rollbar projects list                       # List all projects
@@ -124,6 +126,7 @@ Or if using Bun instead of the compiled binary:
 | `list_deploys`        | List deploys with optional filters                            |
 | `get_deploy`          | Get deploy by ID                                              |
 | `list_environments`   | List environments                                             |
+| `list_top_items`      | Top N items by occurrence count in a time window (no enrich)  |
 | `list_users`          | List all users                                                |
 | `get_user`            | Get user by ID                                                |
 | `create_rql_job`      | Submit an RQL query; returns a queued job (always LIMIT it)   |

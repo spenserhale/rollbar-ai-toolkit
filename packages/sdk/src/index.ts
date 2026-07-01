@@ -17,6 +17,8 @@ export type {
   ListDeploysResult,
   GetItemDetailedParams,
   ItemDetailed,
+  TopItemsParams,
+  TopItem,
   TopItemDetailsParams,
   TopItemDetails,
   RqlJob,
