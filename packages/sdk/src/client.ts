@@ -173,7 +173,7 @@ export class RollbarClient {
     params: GetItemDetailedParams = {},
   ): Promise<ItemDetailed> {
     const item = await this.getItemByCounter(counter);
-    return this.getItemDetailed(item.id, params);
+    return this.enrichItemWithOccurrence(item, params);
   }
 
   // Bare top-N items ranked by total_occurrences within a time window. Fast — single
