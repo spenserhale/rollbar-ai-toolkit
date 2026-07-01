@@ -24,7 +24,7 @@
     "clean": "rm -rf packages/*/dist dist packages/*/node_modules node_modules"
   },
   "devDependencies": {
-    "vite-plus": "latest",
+    "vite-plus": "^0.2.1",
     "yaml": "^2.8.3"
   }
 }
