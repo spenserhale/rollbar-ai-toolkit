@@ -8,6 +8,7 @@ import { deploysRoutes } from "./commands/deploys/commands.js";
 import { environmentsRoutes } from "./commands/environments/commands.js";
 import { usersRoutes } from "./commands/users/commands.js";
 import { rqlJobsRoutes } from "./commands/rql-jobs/commands.js";
+import { queryCommand, byUrlCommand, affectedUsersCommand } from "./commands/rql/commands.js";
 import { agentContextCommand } from "./commands/agent-context/commands.js";
 import { upgradeCommand } from "./commands/upgrade.js";
 import { profileRoutes } from "./commands/profile/commands.js";
@@ -15,8 +16,13 @@ import { feedbackRoutes } from "./commands/feedback/commands.js";
 import { ValidationError } from "./validation.js";
 
 const rqlRoutes = buildRouteMap({
-  routes: { jobs: rqlJobsRoutes },
-  docs: { brief: "Rollbar Query Language (RQL) — submit and read async queries" },
+  routes: {
+    query: queryCommand,
+    "by-url": byUrlCommand,
+    "affected-users": affectedUsersCommand,
+    jobs: rqlJobsRoutes,
+  },
+  docs: { brief: "Rollbar Query Language (RQL) — run queries, helpers, and manage async jobs" },
 });
 
 const routes = buildRouteMap({
