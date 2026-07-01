@@ -90,8 +90,8 @@ describe("runUpgrade", () => {
   });
 
   it("reports up-to-date in --check mode", async () => {
-    const fetchMock = vi.fn(async () =>
-      new Response(JSON.stringify({ tag_name: "v0.1.0" }), { status: 200 }),
+    const fetchMock = vi.fn(
+      async () => new Response(JSON.stringify({ tag_name: "v0.1.0" }), { status: 200 }),
     );
     const deps = makeDeps({ fetch: fetchMock as unknown as typeof fetch });
     await runUpgrade(deps, { check: true, force: false, version: undefined });
@@ -101,20 +101,18 @@ describe("runUpgrade", () => {
   });
 
   it("reports update-available in --check mode", async () => {
-    const fetchMock = vi.fn(async () =>
-      new Response(JSON.stringify({ tag_name: "v0.2.0" }), { status: 200 }),
+    const fetchMock = vi.fn(
+      async () => new Response(JSON.stringify({ tag_name: "v0.2.0" }), { status: 200 }),
     );
     const deps = makeDeps({ fetch: fetchMock as unknown as typeof fetch });
     await runUpgrade(deps, { check: true, force: false, version: undefined });
-    expect(deps.log).toHaveBeenCalledWith(
-      "Update available. Run `rollbar upgrade` to install.",
-    );
+    expect(deps.log).toHaveBeenCalledWith("Update available. Run `rollbar upgrade` to install.");
     expect(deps.writeBinary).not.toHaveBeenCalled();
   });
 
   it("skips install when already on latest and --force is not set", async () => {
-    const fetchMock = vi.fn(async () =>
-      new Response(JSON.stringify({ tag_name: "v0.1.0" }), { status: 200 }),
+    const fetchMock = vi.fn(
+      async () => new Response(JSON.stringify({ tag_name: "v0.1.0" }), { status: 200 }),
     );
     const deps = makeDeps({ fetch: fetchMock as unknown as typeof fetch });
     await runUpgrade(deps, { check: false, force: false, version: undefined });

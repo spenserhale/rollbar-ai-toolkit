@@ -40,7 +40,9 @@ describe("buildByUrlQuery", () => {
 describe("buildAffectedUsersQuery", () => {
   it("filters by item.id and groups by person columns", () => {
     const sql = buildAffectedUsersQuery(4242, 100, 1_700_000_000);
-    expect(sql).toContain("SELECT person.id, person.username, person.email, count(*) AS occurrences");
+    expect(sql).toContain(
+      "SELECT person.id, person.username, person.email, count(*) AS occurrences",
+    );
     expect(sql).toContain("WHERE item.id = 4242");
     expect(sql).toContain("timestamp >= 1700000000");
     expect(sql).toContain("GROUP BY person.id, person.username, person.email");
@@ -78,7 +80,10 @@ describe("injectLimit", () => {
 
 describe("findItemColumn", () => {
   it("prefers item.counter, then item.id, else null", () => {
-    expect(findItemColumn(["item.counter", "occurrences"])).toEqual({ name: "item.counter", kind: "counter" });
+    expect(findItemColumn(["item.counter", "occurrences"])).toEqual({
+      name: "item.counter",
+      kind: "counter",
+    });
     expect(findItemColumn(["item.id"])).toEqual({ name: "item.id", kind: "id" });
     expect(findItemColumn(["timestamp"])).toBeNull();
   });

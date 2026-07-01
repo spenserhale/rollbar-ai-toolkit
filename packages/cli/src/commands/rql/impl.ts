@@ -42,11 +42,7 @@ interface ByUrlFlags extends OutputFlags, ClientFlags, WaitFlags {
   readonly includeVars?: boolean;
 }
 
-export async function byUrl(
-  this: LocalContext,
-  flags: ByUrlFlags,
-  domain: string,
-): Promise<void> {
+export async function byUrl(this: LocalContext, flags: ByUrlFlags, domain: string): Promise<void> {
   const client = await buildClientForFlags(flags);
   const items = await client.rqlByUrl({
     domain,

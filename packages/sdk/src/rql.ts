@@ -31,7 +31,11 @@ export function buildByUrlQuery(domain: string, limit: number, minTimestamp: num
 }
 
 /** Distinct affected users for one item, ranked by per-user occurrence count. */
-export function buildAffectedUsersQuery(itemId: number, limit: number, minTimestamp: number): string {
+export function buildAffectedUsersQuery(
+  itemId: number,
+  limit: number,
+  minTimestamp: number,
+): string {
   intOrThrow(itemId, "item id");
   intOrThrow(limit, "limit");
   intOrThrow(minTimestamp, "minTimestamp");

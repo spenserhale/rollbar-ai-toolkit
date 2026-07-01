@@ -24,7 +24,12 @@ export const queryCommand = buildCommand({
   parameters: {
     positional: {
       kind: "tuple",
-      parameters: [{ brief: "The RQL query string (must include your own LIMIT for large scans)", parse: String }],
+      parameters: [
+        {
+          brief: "The RQL query string (must include your own LIMIT for large scans)",
+          parse: String,
+        },
+      ],
     },
     flags: {
       ...outputFlagDefs,
@@ -65,7 +70,12 @@ export const byUrlCommand = buildCommand({
   parameters: {
     positional: {
       kind: "tuple",
-      parameters: [{ brief: "Domain / host / URL substring to match against occurrence request URLs", parse: String }],
+      parameters: [
+        {
+          brief: "Domain / host / URL substring to match against occurrence request URLs",
+          parse: String,
+        },
+      ],
     },
     flags: {
       ...outputFlagDefs,
@@ -121,6 +131,7 @@ export const affectedUsersCommand = buildCommand({
     },
   },
   docs: {
-    brief: "List the distinct affected users for an item (id/username/email + per-user occurrence count)",
+    brief:
+      "List the distinct affected users for an item (id/username/email + per-user occurrence count)",
   },
 });

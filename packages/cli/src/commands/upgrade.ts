@@ -76,7 +76,11 @@ export function isCompiledBinary(execPath: string): boolean {
 }
 
 export function compareSemver(a: string, b: string): number {
-  const parse = (v: string) => v.replace(/^v/, "").split(".").map((n) => Number(n) || 0);
+  const parse = (v: string) =>
+    v
+      .replace(/^v/, "")
+      .split(".")
+      .map((n) => Number(n) || 0);
   const aParts = parse(a);
   const bParts = parse(b);
   for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
@@ -102,11 +106,7 @@ async function fetchLatestRelease(deps: UpgradeDeps): Promise<{ tag: string; ver
   return { tag: data.tag_name, version: data.tag_name.replace(/^v/, "") };
 }
 
-async function downloadAndVerify(
-  deps: UpgradeDeps,
-  tag: string,
-  asset: string,
-): Promise<Buffer> {
+async function downloadAndVerify(deps: UpgradeDeps, tag: string, asset: string): Promise<Buffer> {
   const base = `https://github.com/${REPO}/releases/download/${tag}`;
   const [assetRes, checksumRes] = await Promise.all([
     deps.fetch(`${base}/${asset}`),
@@ -137,7 +137,9 @@ export async function runUpgrade(deps: UpgradeDeps, flags: UpgradeFlags): Promis
     deps.error("  bun add -g @rollbar-toolkit/cli@latest");
     deps.error("");
     deps.error("Or switch to the standalone binary:");
-    deps.error("  curl -fsSL https://raw.githubusercontent.com/spenserhale/rollbar-ai-toolkit/main/scripts/install.sh | sh");
+    deps.error(
+      "  curl -fsSL https://raw.githubusercontent.com/spenserhale/rollbar-ai-toolkit/main/scripts/install.sh | sh",
+    );
     deps.exit(1);
   }
 

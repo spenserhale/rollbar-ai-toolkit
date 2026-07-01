@@ -454,7 +454,10 @@ export function registerResourceTools(server: FastMCP) {
         .positive()
         .default(100)
         .describe("LIMIT to append when the query has none (default 100)"),
-      window: z.string().optional().describe("Human window (30d/1w); informational for arbitrary queries"),
+      window: z
+        .string()
+        .optional()
+        .describe("Human window (30d/1w); informational for arbitrary queries"),
       includeVars: z
         .boolean()
         .optional()

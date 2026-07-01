@@ -69,7 +69,13 @@ describe("rqlByUrl", () => {
     const { client } = stubbedClient();
     const result: RqlJobResult = {
       job_id: 1,
-      result: { selectionColumns: ["item.counter", "occurrences"], rows: [[12, 100], [34, 50]] },
+      result: {
+        selectionColumns: ["item.counter", "occurrences"],
+        rows: [
+          [12, 100],
+          [34, 50],
+        ],
+      },
     };
     vi.spyOn(client, "getRqlJobResults").mockResolvedValue(result);
     const detail = { item: { id: 999 }, latestOccurrence: null } as unknown as Awaited<
@@ -91,7 +97,10 @@ describe("rqlQuery", () => {
       job_id: 1,
       result: { selectionColumns: ["a"], rows: [] },
     });
-    const outcome = await client.rqlQuery({ queryString: "SELECT a FROM item_occurrence", window: "30d" });
+    const outcome = await client.rqlQuery({
+      queryString: "SELECT a FROM item_occurrence",
+      window: "30d",
+    });
     expect(outcome.warnings.some((w) => w.includes("window not applied"))).toBe(true);
   });
 
@@ -101,7 +110,10 @@ describe("rqlQuery", () => {
       job_id: 1,
       result: { selectionColumns: ["a"], rows: [[1]] },
     });
-    const outcome = await client.rqlQuery({ queryString: "SELECT a FROM item_occurrence", enrich: true });
+    const outcome = await client.rqlQuery({
+      queryString: "SELECT a FROM item_occurrence",
+      enrich: true,
+    });
     expect(outcome.items).toBeUndefined();
     expect(outcome.warnings.some((w) => w.includes("enrich skipped"))).toBe(true);
   });
@@ -128,10 +140,23 @@ describe("rqlQuery", () => {
 
 describe("runRqlToRows (via helpers)", () => {
   it("rejects when the job ends in a non-success terminal status", async () => {
-    const client = new RollbarClient({ projectToken: "t", baseUrl: "https://api.example.com/api/1" });
-    const job = { id: 1, project_id: 1, query_string: "", status: "failed", job_hash: "h", date_created: 0, date_modified: 0 } as const;
+    const client = new RollbarClient({
+      projectToken: "t",
+      baseUrl: "https://api.example.com/api/1",
+    });
+    const job = {
+      id: 1,
+      project_id: 1,
+      query_string: "",
+      status: "failed",
+      job_hash: "h",
+      date_created: 0,
+      date_modified: 0,
+    } as const;
     vi.spyOn(client, "createRqlJob").mockResolvedValue(job as unknown as RqlJob);
     vi.spyOn(client, "waitForRqlJob").mockResolvedValue(job as unknown as RqlJob);
-    await expect(client.rqlAffectedUsers({ itemId: 7 })).rejects.toThrow(/did not complete successfully/);
+    await expect(client.rqlAffectedUsers({ itemId: 7 })).rejects.toThrow(
+      /did not complete successfully/,
+    );
   });
 });

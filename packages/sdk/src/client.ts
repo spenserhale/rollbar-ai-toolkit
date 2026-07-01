@@ -366,8 +366,15 @@ export class RollbarClient {
   }
 
   async rqlQuery(params: RqlQueryParams): Promise<RqlQueryOutcome> {
-    const { queryString, limit = 100, window, enrich, includeVars, timeoutMs, initialIntervalMs } =
-      params;
+    const {
+      queryString,
+      limit = 100,
+      window,
+      enrich,
+      includeVars,
+      timeoutMs,
+      initialIntervalMs,
+    } = params;
     const warnings: string[] = [];
     if (window && !/\btimestamp\b/i.test(queryString)) {
       warnings.push(
