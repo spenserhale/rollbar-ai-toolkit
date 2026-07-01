@@ -41,12 +41,12 @@
 
 Copy `../cloudflare-toolkit/packages/cli/src/commands/upgrade.ts` to `packages/cli/src/commands/upgrade.ts`, then change exactly these four things:
 
-1. `const REPO = "spenserhale/cloudflare-ai-toolkit";` → `const REPO = "spenserhale/rollbar-toolkit";`
+1. `const REPO = "spenserhale/cloudflare-ai-toolkit";` → `const REPO = "spenserhale/rollbar-ai-toolkit";` (the repo's actual GitHub slug — confirm with `git remote -v` and `scripts/install.sh`; it is `rollbar-ai-toolkit`, NOT `rollbar-toolkit`)
 2. In `resolveAssetName`, replace every `cloudflare-` prefix with `rollbar-` (five return strings: `rollbar-linux-x64`, `rollbar-linux-arm64`, `rollbar-darwin-x64`, `rollbar-darwin-arm64`, `rollbar-windows-x64.exe`).
 3. In `isCompiledBinary`, change the comment and the check `name === "cloudflare"` → `name === "rollbar"`.
 4. Replace the three user-facing strings that mention the tool name:
    - the npm/bun hints → `@rollbar-toolkit/cli@latest`
-   - the install.sh URL → `https://raw.githubusercontent.com/spenserhale/rollbar-toolkit/main/scripts/install.sh`
+   - the install.sh URL → `https://raw.githubusercontent.com/spenserhale/rollbar-ai-toolkit/main/scripts/install.sh`
    - the temp filename `.cloudflare-upgrade-` → `.rollbar-upgrade-`
    - the two `` `cloudflare upgrade` `` mentions in log/error text → `` `rollbar upgrade` ``
    - `brief: "Upgrade the CLI to the latest release"` stays as-is.

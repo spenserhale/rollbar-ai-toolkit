@@ -2,28 +2,33 @@ import { ArgumentScannerError, buildApplication, buildRouteMap, text_en } from "
 import { RollbarAuthError, RollbarError, RollbarNotFoundError } from "@rollbar-toolkit/sdk";
 import { itemsRoutes } from "./commands/items/commands.js";
 import { itemDetailsRoutes } from "./commands/item-details/commands.js";
-import { topItemDetailsCommand } from "./commands/top-item-details/commands.js";
 import { occurrencesRoutes } from "./commands/occurrences/commands.js";
 import { projectsRoutes } from "./commands/projects/commands.js";
 import { deploysRoutes } from "./commands/deploys/commands.js";
 import { environmentsRoutes } from "./commands/environments/commands.js";
 import { usersRoutes } from "./commands/users/commands.js";
 import { rqlJobsRoutes } from "./commands/rql-jobs/commands.js";
+import { queryCommand, byUrlCommand, affectedUsersCommand } from "./commands/rql/commands.js";
 import { agentContextCommand } from "./commands/agent-context/commands.js";
+import { upgradeCommand } from "./commands/upgrade.js";
 import { profileRoutes } from "./commands/profile/commands.js";
 import { feedbackRoutes } from "./commands/feedback/commands.js";
 import { ValidationError } from "./validation.js";
 
 const rqlRoutes = buildRouteMap({
-  routes: { jobs: rqlJobsRoutes },
-  docs: { brief: "Rollbar Query Language (RQL) — submit and read async queries" },
+  routes: {
+    query: queryCommand,
+    "by-url": byUrlCommand,
+    "affected-users": affectedUsersCommand,
+    jobs: rqlJobsRoutes,
+  },
+  docs: { brief: "Rollbar Query Language (RQL) — run queries, helpers, and manage async jobs" },
 });
 
 const routes = buildRouteMap({
   routes: {
     items: itemsRoutes,
     "item-details": itemDetailsRoutes,
-    "top-item-details": topItemDetailsCommand,
     occurrences: occurrencesRoutes,
     projects: projectsRoutes,
     deploys: deploysRoutes,
@@ -33,6 +38,7 @@ const routes = buildRouteMap({
     profile: profileRoutes,
     feedback: feedbackRoutes,
     "agent-context": agentContextCommand,
+    upgrade: upgradeCommand,
   },
   docs: {
     brief: "Rollbar CLI — manage items, deploys, projects, and more",

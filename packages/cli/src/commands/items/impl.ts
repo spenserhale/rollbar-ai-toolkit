@@ -51,3 +51,23 @@ export async function getByUuid(
   const result = await client.getItemByUuid(uuid);
   await writeOutput(this.process.stdout, result, flags);
 }
+
+interface TopItemsFlags extends OutputFlags, ClientFlags {
+  readonly window: string;
+  readonly limit: number;
+  readonly status: "active" | "resolved" | "muted" | "archived";
+  readonly level?: "critical" | "error" | "warning" | "info" | "debug";
+  readonly environment?: string;
+}
+
+export async function top(this: LocalContext, flags: TopItemsFlags): Promise<void> {
+  const client = await buildClientForFlags(flags);
+  const items = await client.listTopItems({
+    window: flags.window,
+    limit: flags.limit,
+    status: flags.status,
+    level: flags.level,
+    environment: flags.environment,
+  });
+  await writeOutput(this.process.stdout, { items }, flags);
+}

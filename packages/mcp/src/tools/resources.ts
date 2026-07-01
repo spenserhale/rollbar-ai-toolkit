@@ -97,6 +97,39 @@ export function registerResourceTools(server: FastMCP) {
   });
 
   server.addTool({
+    name: "list_top_items",
+    description:
+      "List the top N most-occurring Rollbar items in a time window, ranked by total_occurrences. Fast — no per-item enrichment. Use list_top_item_details when you also need each item's latest occurrence and stack trace.",
+    parameters: z.object({
+      window: z
+        .string()
+        .default("30d")
+        .describe("Look-back window: 24h, 7d, 30d, 12w, 3m (default: 30d)"),
+      limit: z
+        .number()
+        .int()
+        .positive()
+        .max(50)
+        .default(10)
+        .describe("Number of top items to return (default 10, max 50)"),
+      status: z
+        .enum(["active", "resolved", "muted", "archived"])
+        .default("active")
+        .describe("Filter by item status (default: active)"),
+      level: z
+        .enum(["debug", "info", "warning", "error", "critical"])
+        .optional()
+        .describe("Filter by severity level"),
+      environment: z.string().optional().describe('Filter by environment name, e.g. "production"'),
+    }),
+    execute: async (args) => {
+      const client = getClient();
+      const result = await client.listTopItems(args);
+      return JSON.stringify(result, null, 2);
+    },
+  });
+
+  server.addTool({
     name: "list_top_item_details",
     description:
       "List the top N most-occurring Rollbar items in a time window, each enriched with its latest occurrence and stack trace. Useful for identifying the noisiest errors without making separate calls per item.",
@@ -400,6 +433,75 @@ export function registerResourceTools(server: FastMCP) {
     execute: async (args) => {
       const client = getClient();
       const result = await client.cancelRqlJob(args.id);
+      return JSON.stringify(result, null, 2);
+    },
+  });
+
+  // ---------------------------------------------------------------------------
+  // RQL one-shot helpers (submit + poll + hydrate, wrapped for convenience)
+  // ---------------------------------------------------------------------------
+
+  server.addTool({
+    name: "rql_query",
+    description:
+      "Run an arbitrary RQL query end-to-end (submit job, poll to success, return rows). A LIMIT is appended if the query has none (default 100). Set enrich=true to hydrate rows carrying item.counter/item.id into full item-details. --window is not injected into arbitrary SQL; include your own `timestamp >= ...` clause to bound large scans.",
+    parameters: z.object({
+      queryString: z.string().describe("The RQL query string"),
+      enrich: z.boolean().optional().describe("Hydrate item rows into full item-details"),
+      limit: z
+        .number()
+        .int()
+        .positive()
+        .default(100)
+        .describe("LIMIT to append when the query has none (default 100)"),
+      window: z
+        .string()
+        .optional()
+        .describe("Human window (30d/1w); informational for arbitrary queries"),
+      includeVars: z
+        .boolean()
+        .optional()
+        .describe("Include stack-frame locals when enriching (may contain secrets)"),
+    }),
+    execute: async (args) => {
+      const client = getClient();
+      const result = await client.rqlQuery(args);
+      return JSON.stringify(result, null, 2);
+    },
+  });
+
+  server.addTool({
+    name: "rql_by_url",
+    description:
+      "Find the top-N items whose occurrences hit a URL/domain substring (default 5), each enriched to full item-details plus its occurrence count. Ranked by occurrence count over the given window (default 30d).",
+    parameters: z.object({
+      domain: z.string().describe("Domain / host / URL substring to match"),
+      limit: z.number().int().positive().default(5).describe("Number of top items (default 5)"),
+      window: z.string().default("30d").describe("Look-back window (default 30d)"),
+      includeVars: z
+        .boolean()
+        .optional()
+        .describe("Include stack-frame locals (may contain secrets)"),
+    }),
+    execute: async (args) => {
+      const client = getClient();
+      const result = await client.rqlByUrl(args);
+      return JSON.stringify(result, null, 2);
+    },
+  });
+
+  server.addTool({
+    name: "rql_affected_users",
+    description:
+      "List the distinct users affected by an item (person id/username/email + per-user occurrence count) over the given window (default 30d, up to limit=100). Use to build a contact list once an error is resolved.",
+    parameters: z.object({
+      itemId: z.number().int().positive().describe("Rollbar item ID"),
+      limit: z.number().int().positive().default(100).describe("Max distinct users (default 100)"),
+      window: z.string().default("30d").describe("Look-back window (default 30d)"),
+    }),
+    execute: async (args) => {
+      const client = getClient();
+      const result = await client.rqlAffectedUsers(args);
       return JSON.stringify(result, null, 2);
     },
   });
