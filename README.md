@@ -4,6 +4,15 @@ SDK, CLI, and MCP server for the [Rollbar](https://rollbar.com) API.
 
 ## Quick Start
 
+### Install the CLI
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/spenserhale/rollbar-ai-toolkit/main/scripts/install.sh | sh
+```
+
+The installer verifies the release checksum and installs `rollbar` to
+`$HOME/.local/bin`.
+
 ### Download a binary
 
 Grab the latest release for your platform from the [Releases](../../releases) page. No runtime required.
