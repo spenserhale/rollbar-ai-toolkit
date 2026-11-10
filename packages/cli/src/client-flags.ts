@@ -1,4 +1,7 @@
-import { RollbarClient, resolveConfig } from "@rollbar-toolkit/sdk";
+import { homedir } from "node:os";
+import { join } from "node:path";
+import type { SecretStore } from "@rollbar-toolkit/sdk";
+import { RollbarClient, loadConfig } from "@rollbar-toolkit/sdk";
 import { loadProfileOrThrow, getDefaultProfileName } from "./profile-store.js";
 
 // Spread into every data-returning command's flag definitions to get
@@ -27,37 +30,22 @@ export interface ClientFlags {
 // Build a RollbarClient for a given command invocation, honoring --token, --profile,
 // the ROLLBAR_DEFAULT_PROFILE env var, and the stored default-profile pointer.
 // Falls back to the bare resolveConfig() when nothing extra is supplied.
-export async function buildClientForFlags(flags: ClientFlags): Promise<RollbarClient> {
+export async function loadCliConfig(flags: ClientFlags = {}, secretStore?: SecretStore | null) {
   const profileName =
     flags.profile ?? process.env.ROLLBAR_DEFAULT_PROFILE ?? (await getDefaultProfileName());
   const profileEntry = profileName ? await loadProfileOrThrow(profileName) : undefined;
 
-  // resolveConfig() already prefers explicit overrides over env. We layer profile values
-  // UNDER env by only passing profile entries the env doesn't already define.
-  const overrides: Partial<{
-    projectToken: string;
-    accountToken: string;
-    baseUrl: string;
-    projectId: number;
-  }> = {};
+  const overrides = flags.token ? { projectToken: flags.token, accountToken: flags.token } : {};
+  return await loadConfig({
+    secretStore,
+    overrides,
+    fallback: profileEntry,
+    fallbackSource: profileName
+      ? `config:${process.env.ROLLBAR_PROFILES_PATH ?? join(homedir(), ".rollbar", "profiles.json")}`
+      : undefined,
+  });
+}
 
-  if (flags.token) {
-    overrides.projectToken = flags.token;
-    overrides.accountToken = flags.token;
-  } else if (profileEntry) {
-    if (profileEntry.projectToken && !process.env.ROLLBAR_PROJECT_TOKEN) {
-      overrides.projectToken = profileEntry.projectToken;
-    }
-    if (profileEntry.accountToken && !process.env.ROLLBAR_ACCOUNT_TOKEN) {
-      overrides.accountToken = profileEntry.accountToken;
-    }
-    if (profileEntry.baseUrl && !process.env.ROLLBAR_BASE_URL) {
-      overrides.baseUrl = profileEntry.baseUrl;
-    }
-    if (profileEntry.projectId !== undefined && !process.env.ROLLBAR_PROJECT_ID) {
-      overrides.projectId = profileEntry.projectId;
-    }
-  }
-
-  return new RollbarClient(resolveConfig(overrides));
+export async function buildClientForFlags(flags: ClientFlags): Promise<RollbarClient> {
+  return new RollbarClient(await loadCliConfig(flags));
 }

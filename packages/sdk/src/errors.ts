@@ -22,3 +22,12 @@ export class RollbarNotFoundError extends RollbarError {
     this.name = "RollbarNotFoundError";
   }
 }
+
+export class RollbarConfigError extends RollbarError {
+  readonly exitCode = 3;
+  constructor(message: string, options?: { cause?: unknown }) {
+    super(message, "CONFIG_ERROR");
+    this.name = "RollbarConfigError";
+    if (options?.cause !== undefined) this.cause = options.cause;
+  }
+}

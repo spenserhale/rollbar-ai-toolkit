@@ -1,6 +1,28 @@
 export { RollbarClient } from "./client.js";
-export { resolveConfig } from "./config.js";
-export { RollbarError, RollbarAuthError, RollbarNotFoundError } from "./errors.js";
+export { resolveConfig, loadConfig, redactedConfig } from "./config.js";
+export type {
+  ResolvedConfig,
+  ResolveConfigOptions,
+  LoadConfigOptions,
+  KeychainState,
+  Env,
+} from "./config.js";
+export {
+  bunSecretStore,
+  readKeychainValues,
+  CREDENTIAL_KEYS,
+  KEYCHAIN_SERVICE,
+  RESOURCE_IDS,
+  resourceCredentialKeys,
+  resourceForCredentialKey,
+} from "./secrets.js";
+export type { SecretStore, KeychainStatus, KeychainReadResult, ResourceId } from "./secrets.js";
+export {
+  RollbarError,
+  RollbarConfigError,
+  RollbarAuthError,
+  RollbarNotFoundError,
+} from "./errors.js";
 export type {
   RollbarConfig,
   RollbarItem,

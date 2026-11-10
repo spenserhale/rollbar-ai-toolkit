@@ -55,10 +55,21 @@ export async function agentContext(this: LocalContext): Promise<void> {
     deliver: DELIVER_SINKS,
     profiles: {
       flag: "--profile",
-      precedence: "explicit --token > env var > profile entry > built-in default",
+      precedence:
+        "explicit --token > process env > nearest .env > keychain > profile/config > default",
       available: available_profiles,
       default: default_profile,
       note: "Set ROLLBAR_DEFAULT_PROFILE to override the stored default for one shell.",
+    },
+    environment: {
+      credentials: ["ROLLBAR_PROJECT_TOKEN", "ROLLBAR_ACCOUNT_TOKEN"],
+      keychain: "ROLLBAR_KEYCHAIN=0|false|no|off disables native lookup",
+      defaults: ["ROLLBAR_PROJECT_ID", "ROLLBAR_BASE_URL", "ROLLBAR_DEFAULT_PROFILE"],
+    },
+    auth: {
+      resources: ["rollbar", "project", "account"],
+      secret_input: "Hidden TTY prompt or explicit --stdin; never secret argv",
+      service: "rollbar-toolkit",
     },
     feedback: {
       command: 'rollbar feedback "<text>"',

@@ -48,14 +48,18 @@ bun dist/rollbar-mcp.js
 
 ## Configuration
 
-Set your Rollbar API tokens as environment variables:
+Store credentials once in the OS keychain. Both CLI and MCP find them automatically:
 
 ```bash
-export ROLLBAR_PROJECT_TOKEN="your-project-token"   # items, occurrences, deploys, environments
-export ROLLBAR_ACCOUNT_TOKEN="your-account-token"    # projects, users
+rollbar auth set project   # hidden prompt for ROLLBAR_PROJECT_TOKEN
+rollbar auth set account   # hidden prompt for ROLLBAR_ACCOUNT_TOKEN
+rollbar auth list
+rollbar config show --json # redacted values and credential sources
 ```
 
-You can find these in Rollbar under **Settings > Project Access Tokens** and **Settings > Account Access Tokens**.
+Find tokens under **Settings > Project Access Tokens** and **Settings > Account Access Tokens** in Rollbar. Resolution order is process environment > nearest `.env` > OS keychain > user configuration > defaults. Explicit CLI overrides retain priority.
+
+For scripts, use `pbpaste | rollbar auth set project --stdin` or `op read 'op://Private/Rollbar/project-token' | rollbar auth set project --stdin`. `rollbar auth migrate --dry-run` previews moving existing plaintext credentials. See [configuration](docs/guides/configuration.md) and [security](docs/guides/security.md).
 
 ## CLI
 
@@ -108,68 +112,60 @@ Every command accepts `--token` to override the default token for that request.
 
 The MCP server lets AI assistants (Claude Desktop, Cursor, etc.) query your Rollbar data.
 
-### Setup with Claude Desktop
+### Recommended setup: OS keychain
 
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "rollbar": {
-      "command": "/path/to/rollbar-mcp",
-      "env": {
-        "ROLLBAR_PROJECT_TOKEN": "your-project-token",
-        "ROLLBAR_ACCOUNT_TOKEN": "your-account-token"
-      }
-    }
-  }
-}
-```
-
-Or if using Bun instead of the compiled binary:
+After `rollbar auth set project` and `rollbar auth set account`, add this to your MCP host configuration. No `env` block is needed:
 
 ```json
 {
   "mcpServers": {
     "rollbar": {
       "command": "bun",
-      "args": ["run", "/path/to/dist/rollbar-mcp.js"],
-      "env": {
-        "ROLLBAR_PROJECT_TOKEN": "your-project-token",
-        "ROLLBAR_ACCOUNT_TOKEN": "your-account-token"
-      }
+      "args": ["--no-env-file", "run", "/abs/path/rollbar-ai-toolkit/packages/mcp/src/index.ts"]
     }
   }
 }
 ```
 
+For a compiled server, use `"command": "/abs/path/rollbar-mcp"` and omit `args`. Credentials reload on each tool call, so rotations apply without restarting the host. MCP exposes no tools that store or delete secrets. Headless hosts can continue using environment variables or an `op run` wrapper; see [configuration](docs/guides/configuration.md).
+
 ### Available Tools
 
-| Tool                  | Description                                                   |
-| --------------------- | ------------------------------------------------------------- |
-| `list_items`          | List items with optional filters (status, level, environment) |
-| `get_item`            | Get item by internal ID                                       |
-| `get_item_by_counter` | Get item by project counter number                            |
-| `list_occurrences`    | List occurrences, optionally filtered by item ID              |
-| `get_occurrence`      | Get a single occurrence                                       |
-| `list_projects`       | List all projects                                             |
-| `get_project`         | Get project by ID                                             |
-| `list_deploys`        | List deploys with optional filters                            |
-| `get_deploy`          | Get deploy by ID                                              |
-| `list_environments`   | List environments                                             |
-| `list_top_items`      | Top N items by occurrence count in a time window (no enrich)  |
-| `list_users`          | List all users                                                |
-| `get_user`            | Get user by ID                                                |
-| `get_item_detailed`   | Get an item plus its latest occurrence and stack trace        |
-| `list_top_item_details` | Top-N items, each with its latest occurrence and stack trace |
-| `create_rql_job`      | Submit an RQL query; returns a queued job (always LIMIT it)   |
-| `list_rql_jobs`       | List RQL jobs                                                 |
-| `get_rql_job`         | Check status of an RQL job                                    |
-| `get_rql_job_results` | Fetch rows of a completed RQL job                             |
-| `cancel_rql_job`      | Cancel an in-flight RQL job                                   |
-| `rql_query`           | Run an arbitrary RQL query end-to-end; optional item enrich    |
-| `rql_by_url`          | Top-N items hitting a URL/domain, enriched to item-details     |
-| `rql_affected_users`  | Distinct affected users for an item (contact list)             |
+| Tool                    | Description                                                   |
+| ----------------------- | ------------------------------------------------------------- |
+| `list_items`            | List items with optional filters (status, level, environment) |
+| `get_item`              | Get item by internal ID                                       |
+| `get_item_by_counter`   | Get item by project counter number                            |
+| `list_occurrences`      | List occurrences, optionally filtered by item ID              |
+| `get_occurrence`        | Get a single occurrence                                       |
+| `list_projects`         | List all projects                                             |
+| `get_project`           | Get project by ID                                             |
+| `list_deploys`          | List deploys with optional filters                            |
+| `get_deploy`            | Get deploy by ID                                              |
+| `list_environments`     | List environments                                             |
+| `list_top_items`        | Top N items by occurrence count in a time window (no enrich)  |
+| `list_users`            | List all users                                                |
+| `get_user`              | Get user by ID                                                |
+| `get_item_detailed`     | Get an item plus its latest occurrence and stack trace        |
+| `list_top_item_details` | Top-N items, each with its latest occurrence and stack trace  |
+| `create_rql_job`        | Submit an RQL query; returns a queued job (always LIMIT it)   |
+| `list_rql_jobs`         | List RQL jobs                                                 |
+| `get_rql_job`           | Check status of an RQL job                                    |
+| `get_rql_job_results`   | Fetch rows of a completed RQL job                             |
+| `cancel_rql_job`        | Cancel an in-flight RQL job                                   |
+| `rql_query`             | Run an arbitrary RQL query end-to-end; optional item enrich   |
+| `rql_by_url`            | Top-N items hitting a URL/domain, enriched to item-details    |
+| `rql_affected_users`    | Distinct affected users for an item (contact list)            |
+
+## SDK configuration
+
+```ts
+import { RollbarClient, loadConfig } from "@rollbar-toolkit/sdk";
+
+const client = new RollbarClient(await loadConfig());
+```
+
+`loadConfig()` adds async keychain lookup and reports `credentialSources` and `keychain.status`. `resolveConfig()` remains synchronous; injected `SecretStore` implementations support isolated tests. Node SDK consumers skip Bun-only native lookup.
 
 ## Architecture
 

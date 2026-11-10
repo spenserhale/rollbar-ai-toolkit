@@ -33,6 +33,7 @@
 ## Task 1: Port the `upgrade` command
 
 **Files:**
+
 - Create: `packages/cli/src/commands/upgrade.ts`
 - Create: `packages/cli/src/commands/upgrade.test.ts`
 - Modify: `packages/cli/src/app.ts`
@@ -55,7 +56,7 @@ Copy `../cloudflare-toolkit/packages/cli/src/commands/upgrade.ts` to `packages/c
 
 - [ ] **Step 2: Copy the test and apply substitutions**
 
-Copy `../cloudflare-toolkit/packages/cli/src/commands/upgrade.test.ts` to `packages/cli/src/commands/upgrade.test.ts`, then replace every `cloudflare` with `rollbar` (in `execPath: "/usr/local/bin/rollbar"`, all `resolveAssetName` expectations, the `isCompiledBinary` paths, the `.sha256` response bodies, and the `` "Update available. Run `rollbar upgrade` to install." `` expectation).
+Copy `../cloudflare-toolkit/packages/cli/src/commands/upgrade.test.ts` to `packages/cli/src/commands/upgrade.test.ts`, then replace every `cloudflare` with `rollbar` (in `execPath: "/usr/local/bin/rollbar"`, all `resolveAssetName` expectations, the `isCompiledBinary` paths, the `.sha256` response bodies, and the ``"Update available. Run `rollbar upgrade` to install."`` expectation).
 
 - [ ] **Step 3: Run the test to verify it passes**
 
@@ -94,6 +95,7 @@ git commit -m "feat(cli): add self-upgrade command ported from cloudflare toolki
 ## Task 2: SDK — pure RQL query-builders and row helpers
 
 **Files:**
+
 - Create: `packages/sdk/src/rql.ts`
 - Create: `packages/sdk/tests/rql.test.ts`
 
@@ -141,7 +143,9 @@ describe("buildByUrlQuery", () => {
 describe("buildAffectedUsersQuery", () => {
   it("filters by item.id and groups by person columns", () => {
     const sql = buildAffectedUsersQuery(4242, 100, 1_700_000_000);
-    expect(sql).toContain("SELECT person.id, person.username, person.email, count(*) AS occurrences");
+    expect(sql).toContain(
+      "SELECT person.id, person.username, person.email, count(*) AS occurrences",
+    );
     expect(sql).toContain("WHERE item.id = 4242");
     expect(sql).toContain("timestamp >= 1700000000");
     expect(sql).toContain("GROUP BY person.id, person.username, person.email");
@@ -170,7 +174,10 @@ describe("injectLimit", () => {
 
 describe("findItemColumn", () => {
   it("prefers item.counter, then item.id, else null", () => {
-    expect(findItemColumn(["item.counter", "occurrences"])).toEqual({ name: "item.counter", kind: "counter" });
+    expect(findItemColumn(["item.counter", "occurrences"])).toEqual({
+      name: "item.counter",
+      kind: "counter",
+    });
     expect(findItemColumn(["item.id"])).toEqual({ name: "item.id", kind: "id" });
     expect(findItemColumn(["timestamp"])).toBeNull();
   });
@@ -237,7 +244,11 @@ export function buildByUrlQuery(domain: string, limit: number, minTimestamp: num
 }
 
 /** Distinct affected users for one item, ranked by per-user occurrence count. */
-export function buildAffectedUsersQuery(itemId: number, limit: number, minTimestamp: number): string {
+export function buildAffectedUsersQuery(
+  itemId: number,
+  limit: number,
+  minTimestamp: number,
+): string {
   intOrThrow(itemId, "item id");
   intOrThrow(limit, "limit");
   return [
@@ -312,6 +323,7 @@ git commit -m "feat(sdk): add pure RQL query-builders and row helpers"
 ## Task 3: SDK — RQL helper methods on the client
 
 **Files:**
+
 - Modify: `packages/sdk/src/types.ts`
 - Modify: `packages/sdk/src/client.ts`
 - Modify: `packages/sdk/src/index.ts`
@@ -428,7 +440,13 @@ describe("rqlByUrl", () => {
     const { client } = stubbedClient();
     const result: RqlJobResult = {
       job_id: 1,
-      result: { selectionColumns: ["item.counter", "occurrences"], rows: [[12, 100], [34, 50]] },
+      result: {
+        selectionColumns: ["item.counter", "occurrences"],
+        rows: [
+          [12, 100],
+          [34, 50],
+        ],
+      },
     };
     vi.spyOn(client, "getRqlJobResults").mockResolvedValue(result);
     const detail = { item: { id: 999 }, latestOccurrence: null } as unknown as Awaited<
@@ -450,7 +468,10 @@ describe("rqlQuery", () => {
       job_id: 1,
       result: { selectionColumns: ["a"], rows: [] },
     });
-    const outcome = await client.rqlQuery({ queryString: "SELECT a FROM item_occurrence", window: "30d" });
+    const outcome = await client.rqlQuery({
+      queryString: "SELECT a FROM item_occurrence",
+      window: "30d",
+    });
     expect(outcome.warnings.some((w) => w.includes("window not applied"))).toBe(true);
   });
 
@@ -460,7 +481,10 @@ describe("rqlQuery", () => {
       job_id: 1,
       result: { selectionColumns: ["a"], rows: [[1]] },
     });
-    const outcome = await client.rqlQuery({ queryString: "SELECT a FROM item_occurrence", enrich: true });
+    const outcome = await client.rqlQuery({
+      queryString: "SELECT a FROM item_occurrence",
+      enrich: true,
+    });
     expect(outcome.items).toBeUndefined();
     expect(outcome.warnings.some((w) => w.includes("enrich skipped"))).toBe(true);
   });
@@ -665,6 +689,7 @@ git commit -m "feat(sdk): add rqlQuery, rqlByUrl, rqlAffectedUsers helper method
 ## Task 4: CLI — `rql query`, `rql by-url`, `rql affected-users`
 
 **Files:**
+
 - Create: `packages/cli/src/commands/rql/commands.ts`
 - Create: `packages/cli/src/commands/rql/impl.ts`
 - Modify: `packages/cli/src/app.ts`
@@ -700,7 +725,12 @@ export const queryCommand = buildCommand({
   parameters: {
     positional: {
       kind: "tuple",
-      parameters: [{ brief: "The RQL query string (must include your own LIMIT for large scans)", parse: String }],
+      parameters: [
+        {
+          brief: "The RQL query string (must include your own LIMIT for large scans)",
+          parse: String,
+        },
+      ],
     },
     flags: {
       ...outputFlagDefs,
@@ -741,7 +771,12 @@ export const byUrlCommand = buildCommand({
   parameters: {
     positional: {
       kind: "tuple",
-      parameters: [{ brief: "Domain / host / URL substring to match against occurrence request URLs", parse: String }],
+      parameters: [
+        {
+          brief: "Domain / host / URL substring to match against occurrence request URLs",
+          parse: String,
+        },
+      ],
     },
     flags: {
       ...outputFlagDefs,
@@ -797,7 +832,8 @@ export const affectedUsersCommand = buildCommand({
     },
   },
   docs: {
-    brief: "List the distinct affected users for an item (id/username/email + per-user occurrence count)",
+    brief:
+      "List the distinct affected users for an item (id/username/email + per-user occurrence count)",
   },
 });
 ```
@@ -851,11 +887,7 @@ interface ByUrlFlags extends OutputFlags, ClientFlags, WaitFlags {
   readonly includeVars?: boolean;
 }
 
-export async function byUrl(
-  this: LocalContext,
-  flags: ByUrlFlags,
-  domain: string,
-): Promise<void> {
+export async function byUrl(this: LocalContext, flags: ByUrlFlags, domain: string): Promise<void> {
   const client = await buildClientForFlags(flags);
   const items = await client.rqlByUrl({
     domain,
@@ -945,6 +977,7 @@ git commit -m "feat(cli): add rql query/by-url/affected-users helper commands"
 ## Task 5: MCP — mirror the RQL helpers as tools
 
 **Files:**
+
 - Modify: `packages/mcp/src/tools/resources.ts`
 
 - [ ] **Step 1: Add the three tools**
@@ -952,56 +985,65 @@ git commit -m "feat(cli): add rql query/by-url/affected-users helper commands"
 In `packages/mcp/src/tools/resources.ts`, after the existing `cancel_rql_job` tool registration, add (matching the file's existing `server.addTool({ name, description, parameters: z.object({...}), execute })` pattern — import `z` is already present in this file; reuse the same client construction the other tools use):
 
 ```ts
-  server.addTool({
-    name: "rql_query",
-    description:
-      "Run an arbitrary RQL query end-to-end (submit job, poll to success, return rows). A LIMIT is appended if the query has none (default 100). Set enrich=true to hydrate rows carrying item.counter/item.id into full item-details. --window is not injected into arbitrary SQL; include your own `timestamp >= ...` clause to bound large scans.",
-    parameters: z.object({
-      queryString: z.string().describe("The RQL query string"),
-      enrich: z.boolean().optional().describe("Hydrate item rows into full item-details"),
-      limit: z.number().optional().describe("LIMIT to append when the query has none (default 100)"),
-      window: z.string().optional().describe("Human window (30d/1w); informational for arbitrary queries"),
-      includeVars: z.boolean().optional().describe("Include stack-frame locals when enriching (may contain secrets)"),
-    }),
-    async execute(args) {
-      const client = new RollbarClient(resolveConfig());
-      const result = await client.rqlQuery(args);
-      return JSON.stringify(result, null, 2);
-    },
-  });
+server.addTool({
+  name: "rql_query",
+  description:
+    "Run an arbitrary RQL query end-to-end (submit job, poll to success, return rows). A LIMIT is appended if the query has none (default 100). Set enrich=true to hydrate rows carrying item.counter/item.id into full item-details. --window is not injected into arbitrary SQL; include your own `timestamp >= ...` clause to bound large scans.",
+  parameters: z.object({
+    queryString: z.string().describe("The RQL query string"),
+    enrich: z.boolean().optional().describe("Hydrate item rows into full item-details"),
+    limit: z.number().optional().describe("LIMIT to append when the query has none (default 100)"),
+    window: z
+      .string()
+      .optional()
+      .describe("Human window (30d/1w); informational for arbitrary queries"),
+    includeVars: z
+      .boolean()
+      .optional()
+      .describe("Include stack-frame locals when enriching (may contain secrets)"),
+  }),
+  async execute(args) {
+    const client = new RollbarClient(resolveConfig());
+    const result = await client.rqlQuery(args);
+    return JSON.stringify(result, null, 2);
+  },
+});
 
-  server.addTool({
-    name: "rql_by_url",
-    description:
-      "Find the top-N items whose occurrences hit a URL/domain substring (default 5), each enriched to full item-details plus its occurrence count. Ranked by occurrence count over the given window (default 30d).",
-    parameters: z.object({
-      domain: z.string().describe("Domain / host / URL substring to match"),
-      limit: z.number().optional().describe("Number of top items (default 5)"),
-      window: z.string().optional().describe("Look-back window (default 30d)"),
-      includeVars: z.boolean().optional().describe("Include stack-frame locals (may contain secrets)"),
-    }),
-    async execute(args) {
-      const client = new RollbarClient(resolveConfig());
-      const result = await client.rqlByUrl(args);
-      return JSON.stringify(result, null, 2);
-    },
-  });
+server.addTool({
+  name: "rql_by_url",
+  description:
+    "Find the top-N items whose occurrences hit a URL/domain substring (default 5), each enriched to full item-details plus its occurrence count. Ranked by occurrence count over the given window (default 30d).",
+  parameters: z.object({
+    domain: z.string().describe("Domain / host / URL substring to match"),
+    limit: z.number().optional().describe("Number of top items (default 5)"),
+    window: z.string().optional().describe("Look-back window (default 30d)"),
+    includeVars: z
+      .boolean()
+      .optional()
+      .describe("Include stack-frame locals (may contain secrets)"),
+  }),
+  async execute(args) {
+    const client = new RollbarClient(resolveConfig());
+    const result = await client.rqlByUrl(args);
+    return JSON.stringify(result, null, 2);
+  },
+});
 
-  server.addTool({
-    name: "rql_affected_users",
-    description:
-      "List the distinct users affected by an item (person id/username/email + per-user occurrence count) over the given window (default 30d, up to limit=100). Use to build a contact list once an error is resolved.",
-    parameters: z.object({
-      itemId: z.number().describe("Rollbar item ID"),
-      limit: z.number().optional().describe("Max distinct users (default 100)"),
-      window: z.string().optional().describe("Look-back window (default 30d)"),
-    }),
-    async execute(args) {
-      const client = new RollbarClient(resolveConfig());
-      const result = await client.rqlAffectedUsers(args);
-      return JSON.stringify(result, null, 2);
-    },
-  });
+server.addTool({
+  name: "rql_affected_users",
+  description:
+    "List the distinct users affected by an item (person id/username/email + per-user occurrence count) over the given window (default 30d, up to limit=100). Use to build a contact list once an error is resolved.",
+  parameters: z.object({
+    itemId: z.number().describe("Rollbar item ID"),
+    limit: z.number().optional().describe("Max distinct users (default 100)"),
+    window: z.string().optional().describe("Look-back window (default 30d)"),
+  }),
+  async execute(args) {
+    const client = new RollbarClient(resolveConfig());
+    const result = await client.rqlAffectedUsers(args);
+    return JSON.stringify(result, null, 2);
+  },
+});
 ```
 
 Confirm `RollbarClient` and `resolveConfig` are already imported at the top of `resources.ts` (the existing RQL tools use them); if this file constructs the client differently (e.g. a shared helper), follow that existing pattern instead.
@@ -1028,6 +1070,7 @@ git commit -m "feat(mcp): expose rql_query, rql_by_url, rql_affected_users tools
 ## Task 6: Documentation — item-details and RQL helpers in the README
 
 **Files:**
+
 - Modify: `README.md`
 
 - [ ] **Step 1: Fix the CLI section**

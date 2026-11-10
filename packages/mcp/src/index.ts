@@ -1,9 +1,10 @@
+#!/usr/bin/env -S bun --no-env-file
 import { FastMCP } from "fastmcp";
 import { registerResourceTools } from "./tools/resources.js";
 
 const server = new FastMCP({
   name: "rollbar-toolkit",
-  version: "0.2.0",
+  version: "0.3.0",
 });
 
 // Register tool groups

@@ -1,3 +1,6 @@
+import { authRoutes } from "./commands/auth/commands.js";
+import { configRoutes } from "./commands/config/commands.js";
+import { RollbarConfigError } from "@rollbar-toolkit/sdk";
 import { ArgumentScannerError, buildApplication, buildRouteMap, text_en } from "@stricli/core";
 import { RollbarAuthError, RollbarError, RollbarNotFoundError } from "@rollbar-toolkit/sdk";
 import { itemsRoutes } from "./commands/items/commands.js";
@@ -27,6 +30,8 @@ const rqlRoutes = buildRouteMap({
 
 const routes = buildRouteMap({
   routes: {
+    auth: authRoutes,
+    config: configRoutes,
     items: itemsRoutes,
     "item-details": itemDetailsRoutes,
     occurrences: occurrencesRoutes,
@@ -60,7 +65,7 @@ const text = {
 export const app = buildApplication(routes, {
   name: "rollbar",
   versionInfo: {
-    currentVersion: "0.2.0",
+    currentVersion: "0.3.0",
   },
   scanner: {
     // Accept --project-id (kebab) AND --projectId (camel) on input; render kebab in --help.
@@ -73,6 +78,7 @@ export const app = buildApplication(routes, {
   },
   // Exit code taxonomy is the contract documented in agent-context.
   determineExitCode: (exc) => {
+    if (exc instanceof RollbarConfigError) return 3;
     if (exc instanceof ValidationError) return 2;
     if (exc instanceof ArgumentScannerError) return 2;
     if (exc instanceof RollbarAuthError) return 5;

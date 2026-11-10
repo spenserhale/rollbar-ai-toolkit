@@ -1,13 +1,13 @@
 import type { FastMCP } from "fastmcp";
 import { z } from "zod";
-import { RollbarClient, resolveConfig } from "@rollbar-toolkit/sdk";
+import { RollbarClient, loadConfig } from "@rollbar-toolkit/sdk";
 
-function getClient(): RollbarClient {
-  const config = resolveConfig();
+async function getClient(loader: typeof loadConfig): Promise<RollbarClient> {
+  const config = await loader();
   return new RollbarClient(config);
 }
 
-export function registerResourceTools(server: FastMCP) {
+export function registerResourceTools(server: FastMCP, loader: typeof loadConfig = loadConfig) {
   // ---------------------------------------------------------------------------
   // Items
   // ---------------------------------------------------------------------------
@@ -41,7 +41,7 @@ export function registerResourceTools(server: FastMCP) {
         .describe("Page number for pagination (default 1)"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.listItems(args);
       return JSON.stringify(result, null, 2);
     },
@@ -54,7 +54,7 @@ export function registerResourceTools(server: FastMCP) {
       id: z.number().int().positive().describe("The internal Rollbar item ID"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.getItem(args.id);
       return JSON.stringify(result, null, 2);
     },
@@ -68,7 +68,7 @@ export function registerResourceTools(server: FastMCP) {
       counter: z.number().int().positive().describe("The project-scoped item counter number"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.getItemByCounter(args.counter);
       return JSON.stringify(result, null, 2);
     },
@@ -88,7 +88,7 @@ export function registerResourceTools(server: FastMCP) {
         ),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.getItemDetailed(args.itemId, {
         includeVars: args.includeVars,
       });
@@ -123,7 +123,7 @@ export function registerResourceTools(server: FastMCP) {
       environment: z.string().optional().describe('Filter by environment name, e.g. "production"'),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.listTopItems(args);
       return JSON.stringify(result, null, 2);
     },
@@ -162,7 +162,7 @@ export function registerResourceTools(server: FastMCP) {
         ),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.listTopItemDetails(args);
       return JSON.stringify(result, null, 2);
     },
@@ -198,7 +198,7 @@ export function registerResourceTools(server: FastMCP) {
         .describe("Page number for pagination (default 1)"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.listOccurrences(args);
       return JSON.stringify(result, null, 2);
     },
@@ -211,7 +211,7 @@ export function registerResourceTools(server: FastMCP) {
       id: z.string().describe("The occurrence ID"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.getOccurrence(args.id);
       return JSON.stringify(result, null, 2);
     },
@@ -226,7 +226,7 @@ export function registerResourceTools(server: FastMCP) {
     description: "List all Rollbar projects in the account.",
     parameters: z.object({}),
     execute: async () => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.listProjects();
       return JSON.stringify(result, null, 2);
     },
@@ -239,7 +239,7 @@ export function registerResourceTools(server: FastMCP) {
       id: z.number().int().positive().describe("The Rollbar project ID"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.getProject(args.id);
       return JSON.stringify(result, null, 2);
     },
@@ -276,7 +276,7 @@ export function registerResourceTools(server: FastMCP) {
         .describe("Page number for pagination (default 1)"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.listDeploys(args);
       return JSON.stringify(result, null, 2);
     },
@@ -289,7 +289,7 @@ export function registerResourceTools(server: FastMCP) {
       deployId: z.number().int().positive().describe("The Rollbar deploy ID"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.getDeploy(args.deployId);
       return JSON.stringify(result, null, 2);
     },
@@ -311,7 +311,7 @@ export function registerResourceTools(server: FastMCP) {
         .describe("Filter environments to a specific project ID"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.listEnvironments(args.projectId);
       return JSON.stringify(result, null, 2);
     },
@@ -326,7 +326,7 @@ export function registerResourceTools(server: FastMCP) {
     description: "List all users in the Rollbar account.",
     parameters: z.object({}),
     execute: async () => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.listUsers();
       return JSON.stringify(result, null, 2);
     },
@@ -339,7 +339,7 @@ export function registerResourceTools(server: FastMCP) {
       id: z.number().int().positive().describe("The Rollbar user ID"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.getUser(args.id);
       return JSON.stringify(result, null, 2);
     },
@@ -368,7 +368,7 @@ export function registerResourceTools(server: FastMCP) {
         .describe("Bypass Rollbar's query cache and force a fresh execution (default false)"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.createRqlJob(args);
       return JSON.stringify(result, null, 2);
     },
@@ -386,7 +386,7 @@ export function registerResourceTools(server: FastMCP) {
         .describe("Page number for pagination (default 1)"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.listRqlJobs(args);
       return JSON.stringify(result, null, 2);
     },
@@ -404,7 +404,7 @@ export function registerResourceTools(server: FastMCP) {
         .describe("Include the job's result inline (?expand=result)"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.getRqlJob(args.id, { expandResult: args.expandResult });
       return JSON.stringify(result, null, 2);
     },
@@ -418,7 +418,7 @@ export function registerResourceTools(server: FastMCP) {
       id: z.number().int().positive().describe("The RQL job ID"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.getRqlJobResults(args.id);
       return JSON.stringify(result, null, 2);
     },
@@ -431,7 +431,7 @@ export function registerResourceTools(server: FastMCP) {
       id: z.number().int().positive().describe("The RQL job ID"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.cancelRqlJob(args.id);
       return JSON.stringify(result, null, 2);
     },
@@ -464,7 +464,7 @@ export function registerResourceTools(server: FastMCP) {
         .describe("Include stack-frame locals when enriching (may contain secrets)"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.rqlQuery(args);
       return JSON.stringify(result, null, 2);
     },
@@ -484,7 +484,7 @@ export function registerResourceTools(server: FastMCP) {
         .describe("Include stack-frame locals (may contain secrets)"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.rqlByUrl(args);
       return JSON.stringify(result, null, 2);
     },
@@ -500,7 +500,7 @@ export function registerResourceTools(server: FastMCP) {
       window: z.string().default("30d").describe("Look-back window (default 30d)"),
     }),
     execute: async (args) => {
-      const client = getClient();
+      const client = await getClient(loader);
       const result = await client.rqlAffectedUsers(args);
       return JSON.stringify(result, null, 2);
     },

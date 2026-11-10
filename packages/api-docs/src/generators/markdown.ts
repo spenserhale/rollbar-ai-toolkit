@@ -7,7 +7,7 @@ const SLACK_WEBHOOK_PLACEHOLDER_RE =
 const SLACK_WEBHOOK_REPLACEMENT = "https://hooks.slack.com/services/EXAMPLE";
 const scrub = (s: string) => s.replace(SLACK_WEBHOOK_PLACEHOLDER_RE, SLACK_WEBHOOK_REPLACEMENT);
 import { join, dirname } from "path";
-import type { OpenAPISpec, Operation, PathItem, Parameter, Schema } from "../types.js";
+import type { OpenAPISpec, Operation, Parameter, Schema } from "../types.js";
 
 const HTTP_METHODS = ["get", "post", "put", "patch", "delete", "head", "options", "trace"];
 
@@ -32,7 +32,7 @@ export async function generateMarkdownDocs(spec: OpenAPISpec, outDir: string): P
 
       const operationId = operation.operationId || `${method}_${path.replace(/[{}/]/g, "_")}`;
       const tags = operation.tags || ["Other"];
-      const tag = tags[0];
+      const tag = tags[0] ?? "Other";
 
       const endpoint: EndpointInfo = {
         path,
@@ -271,7 +271,6 @@ function generateSchemaMarkdown(
   let markdown = "";
 
   if (schema.type === "object" && schema.properties) {
-    const indent = "  ".repeat(depth);
     markdown += "```json\n";
     markdown += generateSchemaExample(schema, allSchemas, depth);
     markdown += "\n```\n";

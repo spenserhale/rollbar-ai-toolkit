@@ -14,7 +14,7 @@ Use this guide when changing `packages/cli/` — adding/modifying commands, chan
   - `commands.ts` — Stricli command metadata (flags, brief/help text, route map exports)
   - `impl.ts` — Handler logic that receives the injected `RollbarClient` from `LocalContext`
     Do not collapse these into one file; the split keeps metadata parseable and impl unit-testable.
-- **Build the client via `buildClientForFlags(flags)`.** Never instantiate `RollbarClient` inline in a handler — call the helper from `packages/cli/src/client-flags.ts`. It honors `--token`, `--profile`, `ROLLBAR_DEFAULT_PROFILE`, and the stored default profile per the documented precedence (explicit flag > env > profile > built-in default). The context (`LocalContext`) carries only `process` — the CLI does not eagerly resolve a client at startup, so `--help` and `agent-context` work without credentials.
+- **Build the client via `buildClientForFlags(flags)`.** Never instantiate `RollbarClient` inline in a handler — call the helper from `packages/cli/src/client-flags.ts`. It honors `--token`, `--profile`, `ROLLBAR_DEFAULT_PROFILE`, and the stored default profile per the documented precedence (explicit flag > env > nearest .env > keychain > saved configuration/profile > built-in default). The context (`LocalContext`) carries only `process` — the CLI does not eagerly resolve a client at startup, so `--help` and `agent-context` work without credentials.
 - **All output flows through `output.ts`.** Use `writeOutput(stdout, data, flags)` with `outputFlagDefs` spread into the command's flag definitions. Default format is TOON. Do not `console.log` API data.
 - **Wire new routes in `app.ts`.** Top-level routes go in the `routes` map in `packages/cli/src/app.ts`. Resource subcommands export a `<resource>Routes` route map from their `commands.ts`.
 - **Source imports use `.js` extensions** even for sibling `.ts` files (`./commands.js`, `../../output.js`). Project-wide convention.
@@ -38,7 +38,7 @@ Use this guide when changing `packages/cli/` — adding/modifying commands, chan
   2. `rollbar agent-context` — machine-readable, JSON, `schema_version`-stamped, **derived from the actual route tree** (no hand-written duplicate). Surfaces commands, flags, exit codes, output formats, deliver sinks, and `available_profiles`.
   3. Skill manifests under `.agents/skills/` — long-form workflows the agent composes from individual commands.
 - **Async.** Most Rollbar endpoints are synchronous, so `--wait` does not apply. The exception is **RQL** (`rollbar rql jobs ...`), where create returns a queued job and status transitions through `new → running → success | failed | cancelled | timed_out`. `rql jobs create --wait` blocks until terminal status (exp. backoff + jitter, configurable via `--timeout` and `--poll-interval`) and, on `success`, fetches results in the same call. Without `--wait` the agent does `rql jobs get <id>` + `rql jobs results <id>`. We deliberately skip the local job ledger called for in the skill: Rollbar dedupes by query (`force_refresh=false` default) and `rql jobs list` already returns server-side history, so a local ledger would be duplicate state. **Always include `LIMIT 10` or `LIMIT 100` in the RQL query** — unbounded queries can run for minutes and may time out; the command help text says so, and `agent-context` echoes the same guidance so agents pick it up via introspection.
-- **Profiles.** `rollbar profile save|use|list|show|delete`, stored at `~/.rollbar/profiles.json`. Root `--profile <name>` flag with precedence: explicit flag > env var > profile > built-in default. Available profile names are surfaced in `agent-context`.
+- **Profiles.** `rollbar profile save|use|list|show|delete`, stored at `~/.rollbar/profiles.json`. Root `--profile <name>` flag with precedence: explicit flag > env var > nearest .env > keychain > saved configuration/profile > built-in default. Available profile names are surfaced in `agent-context`.
 - **Two-way I/O.**
   - `--deliver=stdout|file:<path>|webhook:<url>` on every data-returning command. File sinks write atomically (temp + rename). Webhook sinks POST and report HTTP status. Unknown schemes return an enumerated error.
   - `rollbar feedback "<text>"` appends to `~/.rollbar/feedback.jsonl`. If `ROLLBAR_FEEDBACK_ENDPOINT` is set, also POST upstream and report status. `rollbar feedback list` reads the local log back.
@@ -70,3 +70,9 @@ For the full SDK→CLI→MCP flow, follow `.agents/skills/add-api-operation/SKIL
 - `docs/mcp.md` — The MCP server mirrors many of these commands as tools
 - `.agents/skills/add-api-operation/SKILL.md` — End-to-end workflow
 - `agent-native-cli-creator` skill (mandatory) — cross-CLI design system
+
+## Credential management
+
+`auth set|list|delete|migrate` follows the [configuration guide](guides/configuration.md). User-approved exceptions to general vocabulary are `auth set`, `config show`, and `auth delete --yes`. Auth mutations use the credential name as a natural idempotency key and support `--dry-run`; no additional idempotency flag is required. Hidden prompts are allowed only for `auth set` on a TTY; agents must use explicit `--stdin`. Secret values are never accepted as argv. Logic lives in `lib/auth.ts` with an injected SDK `SecretStore`; command definitions stay thin.
+
+`auth list` and `config show` must never print secret values. Migration reports source files in `clean_up` without editing them. `ROLLBAR_KEYCHAIN=0` disables lookup; `agent-context` includes this switch. Tests use fake stores and spawned processes disable native lookup.

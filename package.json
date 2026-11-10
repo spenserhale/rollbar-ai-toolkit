@@ -21,10 +21,14 @@
     "check": "vp check",
     "lint": "vp lint",
     "format": "vp format",
-    "clean": "rm -rf packages/*/dist dist packages/*/node_modules node_modules"
+    "clean": "rm -rf packages/*/dist dist packages/*/node_modules node_modules",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@types/bun": "^1.4.4",
+    "typescript": "^7.0.2",
     "vite-plus": "^0.2.1",
+    "vitest": "4.1.9",
     "yaml": "^2.8.3"
   }
 }

@@ -21,3 +21,7 @@ Use this guide when writing or modifying tests in `packages/*/tests/`, or when r
 ## Related docs
 
 - `docs/sdk.md` — Most test surface area lives here
+
+## Keychain isolation
+
+Credential tests inject an in-memory `SecretStore`; they must never touch the real OS keychain. Every spawned CLI/MCP test process sets `ROLLBAR_KEYCHAIN=0`. Test source precedence, missing-only parallel reads, disabled/unavailable stores, redacted diagnostics, dry runs, migration and explicit stdin behavior. Pass test stdin as `new Blob([text])` or `"ignore"` so no test waits on a terminal.
